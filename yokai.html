@@ -542,6 +542,7 @@ FEATS.forEach(f=>{
 });
 const pills = [...rail.children];
 const STEP = 86, EX = 74;   /* ピル間隔と、展開ぶんの押し下げ量(px) */
+let pTarget = 0, pShown = 0;
 function renderRail(p){
   const act = pills.map((_,j)=> Math.max(0, 1 - Math.abs(j - p)));
   let sBelow = 0, sBefore = [];
@@ -549,9 +550,11 @@ function renderRail(p){
   const sCenter = sBefore[Math.round(Math.min(pills.length-1, Math.max(0,p)))] || 0;
   pills.forEach((el,j)=>{
     const y = (j - p) * STEP + EX * (sBefore[j] - sCenter);
-    const s = .84 + act[j] * .22;
-    el.style.transform = 'translateY('+(y - 66)+'px) scale('+s+')';
-    el.style.opacity = .38 + act[j] * .62;
+    const s = .70 + act[j] * .44;                       /* 大小の落差: 0.70 ↔ 1.14 */
+    const x = -18 * act[j];                             /* 中央の1枚だけ、すこし前へ出る */
+    el.style.transform = 'translate('+x+'px,'+(y - 66)+'px) scale('+s+')';
+    el.style.opacity = .30 + act[j] * .70;
+    el.style.filter = 'blur(' + ((1 - act[j]) * 1.5).toFixed(2) + 'px)';  /* 外れた札は霞む */
     el.style.zIndex = Math.round(10 + act[j]*10);
     el.classList.toggle('on', act[j] > .6);
   });
@@ -578,7 +581,7 @@ if(!reduced){
     scrollTrigger:{ trigger:'#product', start:'top top', end:'+=340%', pin:'.stage', scrub:1,
       snap:{ snapTo:1/(FEATS.length-1), duration:{min:.15,max:.4}, ease:'power2.out' },
       onUpdate(self){ const i = Math.min(2, Math.floor(self.progress*3)); setColorway(i);
-        renderRail(self.progress*(FEATS.length-1)); } },
+        pTarget = self.progress*(FEATS.length-1); } },
     defaults:{ ease:'none' }
   })
   .fromTo('#turn', { rotateY:-26, rotate:-5, scale:.82 }, { rotateY:26, rotate:5, scale:1, duration:1 })
@@ -587,7 +590,14 @@ if(!reduced){
 }else{
   setColorway(0);
 }
+/* レールの慣性: 表示値が目標へ毎フレーム14%ずつ追いつく（ぬるっと吸い付く送り） */
 renderRail(0);
+if(!reduced && window.gsap){
+  gsap.ticker.add(()=>{
+    pShown += (pTarget - pShown) * 0.14;
+    if(Math.abs(pTarget - pShown) > 0.0004) renderRail(pShown);
+  });
+}
 addEventListener('resize', ()=>{ if(reduced) renderRail(0); });
 
 /* ── 表紙: 3枚の入れ替え表示（ゆっくりクロスフェード） ── */
