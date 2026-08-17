@@ -5,7 +5,6 @@
 <meta name="robots" content="noindex, nofollow, noarchive">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>YOKAI — lookbook vol.0</title>
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Klee+One:wght@400;600&family=Shippori+Mincho:wght@400;500&family=Space+Mono:wght@400;700&family=Zen+Kaku+Gothic+New:wght@300;400;500&display=swap" rel="stylesheet">
@@ -104,24 +103,28 @@ a{color:inherit}
   background-size:300px 300px;opacity:.35;mix-blend-mode:overlay;pointer-events:none;
 }
 /* 機能レール（Apple型: 中央の項目が大きく・外れると縮む。ガラス風ピル） */
-#featrail{position:absolute;z-index:4;right:clamp(1.2rem,4.5vw,4.2rem);top:50%;width:min(330px,30vw);height:0}
+#featrail{position:absolute;z-index:4;right:clamp(4rem,15vw,220px);top:50%;width:min(380px,32vw);height:0}
 .fpill{
-  position:absolute;top:0;right:0;width:100%;
-  border-radius:22px;padding:.85rem 1.2rem;color:var(--ink);
-  background:rgba(252,252,249,.62);
-  -webkit-backdrop-filter:blur(16px) saturate(1.1);backdrop-filter:blur(16px) saturate(1.1);
-  border:1px solid rgba(255,255,255,.78);
-  box-shadow:0 6px 24px rgba(40,35,28,.10), inset 0 1px 0 rgba(255,255,255,.85);
+  position:absolute;top:0;right:0;width:100%;overflow:hidden;
+  border-radius:20px;padding:1rem 1.4rem;color:var(--ink);
+  background:rgba(250,246,238,.66);
+  -webkit-backdrop-filter:blur(16px) saturate(1.08);backdrop-filter:blur(16px) saturate(1.08);
+  border:1px solid rgba(255,252,244,.85);
+  box-shadow:0 6px 24px rgba(70,52,30,.10), inset 0 1px 0 rgba(255,253,246,.9);
   transform-origin:100% 50%;will-change:transform;
 }
-.fpill.on{box-shadow:0 14px 40px rgba(40,35,28,.16), inset 0 1px 0 rgba(255,255,255,.95)}
+.fpill::before{
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background-image:var(--grain);background-size:300px 300px;opacity:.22;mix-blend-mode:overlay;
+}
+.fpill.on{box-shadow:0 16px 44px rgba(70,52,30,.16), inset 0 1px 0 rgba(255,253,246,.95)}
 .fpill .fk{
   display:block;font-family:'Space Mono',monospace;font-size:.55rem;letter-spacing:.18em;
-  text-transform:uppercase;color:var(--faint);margin-bottom:.15rem;
+  text-transform:uppercase;color:var(--faint);margin-bottom:.2rem;
 }
-.fpill .ft{font-size:.92rem;font-weight:600;letter-spacing:.04em}
+.fpill .ft{font-family:'Shippori Mincho',serif;font-size:1.04rem;font-weight:500;letter-spacing:.12em}
 .fpill .fd{
-  font-size:.8rem;line-height:1.85;margin-top:0;color:#5A574F;
+  font-size:.84rem;line-height:1.9;margin-top:0;color:#5A574F;
   opacity:0;max-height:0;overflow:hidden;
   transition:opacity .28s ease,max-height .28s ease,margin-top .28s ease;
 }
@@ -132,7 +135,7 @@ a{color:inherit}
   .fpill .ft{font-size:.85rem}
 }
 #pod{
-  position:absolute;left:32%;top:50%;width:min(54vh,390px);
+  position:absolute;left:37%;top:50%;width:min(54vh,390px);
   transform:translate(-50%,-50%);
   perspective:900px;
 }
@@ -153,7 +156,7 @@ a{color:inherit}
   filter:blur(6px);
 }
 #product .plabel{
-  position:absolute;left:32%;transform:translateX(-50%);text-align:center;
+  position:absolute;left:37%;transform:translateX(-50%);text-align:center;
   top:calc(50% + min(30vh,262px));white-space:nowrap;
 }
 @media (max-width:900px){
@@ -538,7 +541,7 @@ FEATS.forEach(f=>{
   rail.appendChild(el);
 });
 const pills = [...rail.children];
-const STEP = 74, EX = 66;   /* ピル間隔と、展開ぶんの押し下げ量(px) */
+const STEP = 86, EX = 74;   /* ピル間隔と、展開ぶんの押し下げ量(px) */
 function renderRail(p){
   const act = pills.map((_,j)=> Math.max(0, 1 - Math.abs(j - p)));
   let sBelow = 0, sBefore = [];
@@ -547,7 +550,7 @@ function renderRail(p){
   pills.forEach((el,j)=>{
     const y = (j - p) * STEP + EX * (sBefore[j] - sCenter);
     const s = .84 + act[j] * .22;
-    el.style.transform = 'translateY('+(y - 58)+'px) scale('+s+')';
+    el.style.transform = 'translateY('+(y - 66)+'px) scale('+s+')';
     el.style.opacity = .38 + act[j] * .62;
     el.style.zIndex = Math.round(10 + act[j]*10);
     el.classList.toggle('on', act[j] > .6);
