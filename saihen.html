@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>web制作システム再編 v1 — 変化のログ・現在地・これからの作り方</title>
+<style>
+:root{--ink:#1c1e21;--sub:#6b6f75;--line:#e6e4de;--bg:#ffffff;--soft:#f7f6f3;--ok:#2f6b52}
+@media (prefers-color-scheme:dark){
+  :root{--ink:#f0eeea;--sub:#a8adb1;--line:#2d3134;--bg:#121416;--soft:#1d2123;--ok:#7cc4a4}
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);
+  font-family:"Hiragino Kaku Gothic ProN","Hiragino Sans",sans-serif;
+  line-height:1.95;letter-spacing:.03em;-webkit-font-smoothing:antialiased;padding-bottom:120px}
+.wrap{width:min(92%,900px);margin-inline:auto}
+header{padding:70px 0 26px;border-bottom:1px solid var(--line)}
+h1{font-size:clamp(23px,4.2vw,36px);font-weight:700;letter-spacing:.06em;line-height:1.5}
+header .meta{margin-top:14px;color:var(--sub);font-size:13px}
+nav.toc{margin:26px 0 10px;padding:18px 20px;background:var(--soft);border-radius:12px}
+nav.toc a{display:inline-block;font-size:12.5px;color:var(--sub);text-decoration:none;
+  margin:0 14px 6px 0;border-bottom:1px solid transparent}
+nav.toc a:hover{color:var(--ink);border-color:var(--ink)}
+h1,h2,h3,h4{scroll-margin-top:20px}
+h2{font-size:clamp(18px,2.5vw,24px);font-weight:700;letter-spacing:.08em;
+  margin:70px 0 14px;padding-top:22px;border-top:1px solid var(--line)}
+h3{font-size:clamp(15px,2vw,18px);font-weight:700;margin:38px 0 10px;letter-spacing:.05em}
+h4{font-size:14px;font-weight:700;margin:26px 0 8px;color:var(--sub)}
+p{margin:14px 0;font-size:14.5px}
+ul,ol{margin:14px 0 14px 1.3em}
+li{font-size:14.5px;margin:6px 0}
+blockquote{margin:18px 0;padding:16px 20px;background:var(--soft);
+  border-left:3px solid var(--line);border-radius:0 8px 8px 0;color:var(--sub)}
+blockquote p{font-size:13.5px;margin:8px 0}
+blockquote p:first-child{margin-top:0}
+blockquote p:last-child{margin-bottom:0}
+blockquote ul{margin:8px 0 8px 1.2em}
+blockquote li{font-size:13.5px;margin:5px 0}
+blockquote strong{color:var(--ink)}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.86em;
+  background:var(--soft);padding:.15em .45em;border-radius:5px}
+pre{margin:18px 0;padding:16px 18px;background:var(--soft);border-radius:10px;overflow-x:auto}
+pre code{background:none;padding:0;font-size:12.5px;line-height:1.75;white-space:pre}
+.tw{overflow-x:auto;margin:18px 0;-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;min-width:520px;font-size:13px}
+th,td{border:1px solid var(--line);padding:9px 12px;text-align:left;vertical-align:top}
+th{background:var(--soft);font-weight:700;white-space:nowrap}
+hr{border:none;border-top:1px solid var(--line);margin:34px 0}
+a{color:inherit}
+.foot{margin-top:70px;padding-top:20px;border-top:1px solid var(--line);
+  color:var(--sub);font-size:12px;line-height:2}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>web制作システム再編 v1<br>— 変化のログ・現在地・これからの作り方</h1>
+  <p class="meta">2026-08-16 版 ／ 7週間の実測にもとづく総決算</p>
+</header>
+<nav class="toc"><a href="#00">00. 結論</a><a href="#01">01. 変化のログ（何をどう作ってきて、どこで考えが変わったか）</a><a href="#02-ai-3">02. 目線の二相 — 「AIっぽいボックス3連」と今日の差の正体</a><a href="#03-3">03. 二系統の合流 — 対応表と、解くべきだった矛盾3件</a><a href="#04">04. 資産の処遇表（棚卸し実測に基づく）</a><a href="#05-v1-48">05. 施主審美ペルソナ v1（評価48件＋学習ログ＋今日の裁定から）</a><a href="#06-v3">06. これからの作り方（定式v3）</a><a href="#07">07. あなたが「動きの言葉」を学べる状態にする</a><a href="#08">08. 未決定・検証ポイント一覧（すべてここに集約）</a><a href="#09">09. 本書の位置づけ</a></nav>
+<blockquote><p>2026-08-15の全実験（drinkstill再現〜東栄観光バスのノーカウント）と、design_lab全域の機械棚卸し（5並列読解・同日深夜実施）に基づく総決算。<strong>このファイルは「今どこにいて、次からどう作るか」の正本</strong>。個別の詳細は各正本（成功要因診断_v1／審美カルテ_v1／モジュール台帳／design_lab各文書）へ。</p></blockquote>
+<hr>
+<h2 id="00">00. 結論</h2>
+<blockquote><p><strong>二つの系統が、互いを知らないまま同じ場所に辿り着いていた。</strong></p><ul><li><strong>design_lab系統</strong>（7/14〜）は「美の言語導出」を4週間かけて棄却し、「画素から引いて施主が選抜する」（画素起点方法論・8/11）に到達。参照追随（ppref線・Im donut）で初の「これまでで最も良い」査収を得ていた。</li><li><strong>今日の系統</strong>（web制作の型・8/15）は「機構分解×観察入力×知覚ループ」で施主初の「感動した」を得て、モジュール台帳・審美カルテを新設した。</li><li>両者の合流点: <strong>①見た目を最終決定するのは常に施主の目（選抜・裁定）②庫・台帳は工学の位置でのみ収束させてよい ③欠けているのは編成（構図）のレイヤー ④参照追随が現状最強 ⑤機械の審美判定は施主と別軸で動く（打率5割未満の実測）</strong>——5点とも両系統が独立に実証した。もう偶然ではない。</li><li>問題は思想ではなく<strong>配線</strong>。web制作の型はdesign_labを一度も参照せず（grep 0件）、K語彙は2箇所に分裂し、toeiの教訓3点は台帳未反映。<strong>次の仕事は新しい発明ではなく、この統一</strong>。</li><li><strong>2026-08-16 追記: §08「手術」6件を完了</strong>（配線・K語彙統合・編成カタログ新設・3D適用境界・相互参照・README整理）。以後の焦点は検証実験へ移る——最初は「再現性 n=2（別題材で定式v3をフル運用・編成3案提示から）」。</li></ul></blockquote>
+<hr>
+<h2 id="01">01. 変化のログ（何をどう作ってきて、どこで考えが変わったか）</h2>
+<div class="tw"><table><thead><tr><th>時期</th><th>出来事</th><th>その時の思想</th><th>転換点</th></tr></thead><tbody><tr><td>7/14</td><td>design_lab発足。フェラーリ表紙で初の施主賞賛（画像生成）</td><td>感動をカード化→原理7条に蒸留すれば美を導出できる</td><td>「白ベース固定観念」の指摘——原理の過剰一般化問題が初日に露呈</td></tr><tr><td>7/16〜27</td><td>日光溶材v3〜v8。4役体制（BD/リサーチャー/FE/アイブ）を構築</td><td>役割分担と工程ゲートで品質が出る</td><td><strong>v8事故: 5.2時間・13体・280万トークンでCSS+575行</strong>。「工程を使ってはならない」と自己停止</td></tr><tr><td>7/27〜28</td><td>教師候補30件を機械選定→施主レビュー</td><td>機械が良いサイトを選べる</td><td><strong>打率5割未満</strong>。「機械は部品を解剖し、施主は体験で判定する」——同じ画面で逆の結論</td></tr><tr><td>8/1</td><td>意味オントロジーv2案を施主が棄却</td><td>構造の注入で美を運べる</td><td>「リサーチ踏襲に快楽を覚えていないか」「そこに答えはない」</td></tr><tr><td>8/4</td><td>web制作の型スキル新設（<strong>design_labと無配線のまま</strong>）</td><td>錨の注入で1パス品質を上げる</td><td>ここで平行世界が分岐</td></tr><tr><td>8/10</td><td>灯野交通（架空バス会社）実験・時間軸方法論</td><td>中間表現3枚で一発生成できる</td><td>「素人がAIで作った、ワクワクしないデザイン」=水準未満。<strong>構図（レイアウト型）を運ぶ文書が無い</strong>ことが確定</td></tr><tr><td>8/11</td><td><strong>画素起点方法論へ転回</strong>。部品パレット新設。「庫=収束装置」裁定を適用位置限定に緩和</td><td><strong>美は導出せず、画素の分布から引いて施主が選抜する</strong></td><td>実験3で4週間ぶりの肯定「ここまではいい感じ」</td></tr><tr><td>8/12</td><td>ppref線: Im donut参照追随（日光溶材実装）</td><td>参照を限界まで真似る</td><td>施主査収「<strong>これまでで最も良い</strong>」</td></tr><tr><td>8/14深夜〜8/15</td><td><strong>今日</strong>: drinkstill完全再現→ボンベ→ウェザリング→日光溶材3ページ→amamaru（Im donut機構分解・往復2周）→東栄観光バス</td><td>機構分解×スクロール実況×知覚ループ</td><td>「感動した」「初めてAIの使い方が分かった」→ 台帳・審美カルテ・A/B/C規範が誕生</td></tr><tr><td>8/15深夜</td><td>東栄観光バス<strong>ノーカウント裁定</strong></td><td>（無自覚の）直前成功編成の再利用</td><td><strong>自己テンプレ化の発見</strong>——分布の重心回帰が「昨日の自分」に対して起きる。編成カタログの必要が確定</td></tr></tbody></table></div>
+<p><strong>思想の変遷を一行で</strong>: 「原理で導出する」→「工程と役で作る」→「構造を注入する」→（全て水準未満）→「<strong>施主の目を上流に置き（選抜/実況）、AIは既知部品の翻訳と検証に徹する</strong>」。これが現在地。あなたの「思想がズレていた気がする」は正確で、ズレは<strong>AIに審美の決定権を持たせようとしていた</strong>点にあった。7週間の実測の結論: <strong>審美の決定は施主・翻訳と工学はAI</strong>という分業だけが機能した。</p>
+<hr>
+<h2 id="02-ai-3">02. 目線の二相 — 「AIっぽいボックス3連」と今日の差の正体</h2>
+<ul><li><strong>ドキュメント目線</strong>: ページ=文書、セクション=情報の箱。AIが「情報を整理して配置する」目的関数で動くとき、見出し+カード3枚は実際に最適解。旧日光溶材v1〜v7がこれで、<strong>施主は7/24に既に「いかにも資料っぽい」と言語化していた</strong>（design_lab棚卸しで発見）。納品レーンの規範（アニメ抑制・GSAP不使用・資料の家訓）がこの目線を制度として固定していた。</li><li><strong>シーン目線</strong>: ページ=時間軸、スクロール=時間、セクション=場面、情報=場面の小道具。今日の全成果物はこちら。<strong>見本サイトの隠れた最大の役割は、この目線を暗黙に注入すること</strong>だった。</li><li>帰結: 見本なしで作るときは、初期指示の1行目で目線を明示的にキャストする。</li></ul>
+<blockquote><p><strong>開幕宣言テンプレ（初期指示の1行目）</strong></p><p>このページは「読む文書」ではなく「体験するシーン」として作る。スクロールは時間軸、各セクションは場面。情報はレイアウトするのではなく場面の中で登場させる。主役の動きは【◯◯】1つ。箱型カードの並置で情報を「置く」ことを禁じる。</p></blockquote>
+<hr>
+<h2 id="03-3">03. 二系統の合流 — 対応表と、解くべきだった矛盾3件</h2>
+<div class="tw"><table><thead><tr><th>論点</th><th>design_lab系統の到達</th><th>今日の系統の到達</th><th>統一</th></tr></thead><tbody><tr><td>見た目の決定</td><td>画素コンプ→施主ピック（選抜）</td><td>実況→A/B/C→一語裁定</td><td>同じ原理の静的版/動的版。<strong>上流は常に施主の目</strong></td></tr><tr><td>部品庫</td><td>6_parts E1〜E8（症状・真因・対処・検査／同型2例目昇格）＋部品パレット（既製品）</td><td>モジュール台帳21機構（自作機構）</td><td><strong>3庫は同族</strong>。E系列=事故、パレット=既製、台帳=自作。引き方は全て「分散の軸・工学の位置」</td></tr><tr><td>評価語彙</td><td>K-1〜K-22／AI-1〜14（124サイト・48件裁定済み）</td><td>審美カルテK1〜K9</td><td><strong>統合済み（2026-08-16）</strong>。正本はdesign_lab側のK-n。カルテは独自番号を廃してK-n/AI-nのダイジェストへ。カルテ発の新軸はK-23・K-24として起案（施主merge待ち）</td></tr><tr><td>参照追随</td><td>ppref線「限界まで真似して」→「これまでで最も良い」</td><td>機構分解方式（3層分離で著作権も処理）</td><td>今日の方式が上位互換（分解→翻訳→表層差し替え）</td></tr><tr><td>欠落レイヤー</td><td>「構図の型を運ぶ文書が無い」（8/10確定）</td><td>「編成カタログが無い」（toei失敗で確定）</td><td><strong>同一の発見</strong>。灯野交通スキンの「構図の型」節＋意味構造カタログ3枚が種</td></tr></tbody></table></div>
+<p><strong>矛盾の解決3件</strong>（判断・逐語根拠つき）:</p>
+<ol><li><strong>「導出の死」vs「機構翻訳の成功」</strong>——矛盾しない。死んだのは「美を言語から導出する」路線。機構翻訳は導出ではなく<strong>施主の観察（=選抜済みの視点）の実装転写</strong>。画素起点§04自身が「K-1〜11残す=段1のプロンプト語彙」「意味構造カタログ残す=構図語彙」と語彙・カタログの存続を適法としている。</li><li><strong>「庫=収束装置」裁定 vs モジュール台帳</strong>——8/11裁定「見た目を決める位置でのみ禁」で解決済み。台帳は工学の位置（ピック後の実装部品）にあり適法。<strong>新設する編成カタログも「束を割る分散の軸」として引く</strong>（部品パレットと同じ引き方）。見た目の最終決定は常に施主裁定。</li><li><strong>平行世界</strong>——正本を指名して配線する: <strong>工程の正本=web制作の型（スキル）／評価語彙とデータの正本=design_lab（評価ログ・K-n・学習ログ）／部品の正本=3庫（E系列・パレット・台帳）</strong>。スキルから3庫とK-nへの参照を張る（現状grep 0件の断絶を解消）。</li></ol>
+<hr>
+<h2 id="04">04. 資産の処遇表（棚卸し実測に基づく）</h2>
+<div class="tw"><table><thead><tr><th>処遇</th><th>資産</th><th>根拠</th></tr></thead><tbody><tr><td><strong>中枢として生かす</strong></td><td>評価ログ（124件・48裁定）／学習ログ／K-n・AI-n語彙／6_parts E系列／部品パレット／モジュール台帳／審美カルテ／成功要因診断／調達台帳／genimg.py＋プロンプト様式／site-reviewアプリ</td><td>全て導線あり・更新中</td></tr><tr><td><strong>配線して生かす</strong>（現状断絶）</td><td>web職能_v1（版面三層・密度の職能・写真の主権）／モーション_v1（調律値・境界線表）／webリズム研究（DOM診断=カルテK5の機械化そのもの）／灯野交通スキン「構図の型」節／意味構造カタログ3枚</td><td>中身は今日の結論と整合するのに、web制作の型から参照されていない。編成カタログの母材</td></tr><tr><td><strong>役目終了・参照専用</strong></td><td>雑誌レイアウト_v1（スキンに吸収済み）／時間軸方法論（画素起点が上書き）／v3〜v7各スキン・v8文書束（歴史）</td><td>吸収済みor上書き済み</td></tr><tr><td><strong>休眠のまま維持</strong>（復活条件つき）</td><td>4役ループ・役文書3枚（リサーチャー§5/§5b除く）</td><td>コスト上限の自己停止が有効。軽量化できたときだけ再開</td></tr><tr><td><strong>畳む・整理</strong></td><td>教師候補16件版（裁定なし・素材消滅）／overview.html（導線ゼロ）／意味オントロジーHTML版（md正本と二重）／launch.json:8779（旧scratchpad残骸）／web_gen_lab READMEの死んだ「稼働中」記述（exp1.py等は消滅済み）</td><td>死蔵・分岐リスク</td></tr><tr><td><strong>リポジトリ外・要注意</strong></td><td>~/web_gen_lab/drinkstill_replica/ 9枚（台帳の実証例パスの実体）</td><td>揮発可宣言のまま台帳が参照。消えると台帳の実証例が空参照になる</td></tr></tbody></table></div>
+<hr>
+<h2 id="05-v1-48">05. 施主審美ペルソナ v1（評価48件＋学習ログ＋今日の裁定から）</h2>
+<blockquote><p>用途: 機械が施主の代わりに見るときの「目の使い方」。K軸（何を見るか）の上位にある「どう見るか」。</p></blockquote>
+<p><strong>見る順番（最重要・実測: 機械と逆）</strong>: ①まず1スクロールの<strong>体験の総体</strong>として感じる（「ぬるっと気持ちいい」「ワクワクしない」）→ ②<strong>商圏の目</strong>で用途適合を問う（「テック系の黒はカッコいいが需要が無い」——良し悪しと別の第3軸）→ ③<strong>実装の目</strong>でコストを見る（「バイブスコーディングでこのレベルは難しいのでは」）。部品の解剖から入らない。機械が部品を肯定し施主が総体を否定した実例が複数ある。</p>
+<p><strong>快の構造（何に反応するか）</strong>:</p>
+<ul><li><strong>奥行き・立体</strong>——層、別速度、隙間から奥が見える（今日のK1/K2。8/15「奥行きがこのサイトのポイント」）</li><li><strong>動き=モダンさの基本装備</strong>（7/24「動きは過剰な装飾ではなく基本手法」・7/27「動きを切り捨てることはモダンさの排除」）。ただし総量ではなく<strong>統合</strong>が条件（「アニメーションが全体のリズムと合っていない」は不採用）</li><li><strong>入場の儀式</strong>（「ローディング画面が上質」・電飾サイン起動に「信頼感と期待感の醸成」）</li><li><strong>リズムとメリハリ</strong>——最頻の否定語は「画一的」「単調」「メリハリがない」。同型3連続=即棄却</li><li><strong>強さの一貫</strong>（「ページ全体がずっと強いとブランド表現になる」ID45）と<strong>品の良さ</strong>（D1「シンプルで綺麗。品の良さそうさ」）の両極を持ち、<strong>どちらかに固定しない</strong>（「抽象・シンプルは一つの最適であって唯一解ではない」）</li><li><strong>人間っぽさの注入</strong>（不規則配置・ずらし・「AIっぽくない空気感」）と<strong>日本語書体の質感</strong></li><li><strong>憧れ軸</strong>（「いつか使ってみたいと思わせる」＝K-11。実用性と別枠で立つ）</li><li><strong>意外な軸: 量産型を強いと言う</strong>——「テンプレとして汎用性が高い」を教師に選ぶ（ID7/ID14）。クリエイティブ至上ではなく、<strong>幅のレパートリー</strong>として良品テンプレも評価する</li></ul>
+<p><strong>不快の構造</strong>: 提案の幅が狭い（8種が似通う）／リサーチ踏襲・複雑化への自己目的化（「快楽を覚えていないか」）／過剰一般化（「黒背景禁止と読むな」訂正2件）／コスト超過（280万トークン事故）／勝手な既定化（「画像は作らないの？」——素材方針は聞け）。</p>
+<p><strong>対話の型</strong>: 観察・症状で語る（形容詞でなく「文字が一回消えてもう一回出る」）／一語裁定／技術はブランドに干渉しないという分離感覚／自分も語彙を学んで壁を削りたいという参加姿勢。</p>
+<hr>
+<h2 id="06-v3">06. これからの作り方（定式v3）</h2>
+<pre><code>
+【上流=施主の目】 題材と素材方針の確定 → 入力は3形態のどれか:
+   a. 参照あり: スクロール実況（+部位参照）
+   b. 参照なし: 体験実況 + 編成3案の文章提示から裁定
+   c. 静的KV系: 画素コンプ選抜（design_lab画素起点・7段）
+【開幕宣言】 シーン目線のキャスト（§02のテンプレ）+ 主役機構1つ + 禁じ手
+【中流=AIの翻訳】 台帳で機構翻訳 / 編成は直前成功の丸使い禁止 /
+   3D適用境界（回転体◎・箱物はglTF調達・有機物は写真）/ 迷えばA/B/C
+【下流=AIの目】 実装 → スクショ知覚ループ → 審美カルテK軸自己採点 →
+   ×を直してから提示 → 施主の一語裁定 → 裁定をK-n/台帳へ還流
+【納品時】 vendor同梱・Lighthouse・pin上限・reduced-motion全機構
+</code></pre>
+<hr>
+<h2 id="07">07. あなたが「動きの言葉」を学べる状態にする</h2>
+<p>意図と実装の壁を削る第2の道（AIの翻訳精度向上と対称）。現状の教材は台帳の意味タグ索引（21機構×感覚語）だが、読み物のままでは覚えられない。方針:</p>
+<ol><li><strong>台帳のカタログHTML化</strong>——1機構=1カード（機構名・あなたの感覚語・3秒ループのデモ・「言い方の例」）。iPhoneで眺められる形。site-reviewアプリと同じ配信方式が流用できる</li><li><strong>裁定のたびに語彙が増える</strong>——A/B/C提示には必ず機構名を併記する（すでに規範化済み）。あなたが選ぶたび、名前と動きが対で記憶される</li><li>参考: 施主自身が既に「用語定義せよ」と指示した前例（8/12「ピン留め横スクロールセクション」）——この運用を全機構に広げるだけ</li></ol>
+<hr>
+<h2 id="08">08. 未決定・検証ポイント一覧（すべてここに集約）</h2>
+<p><strong>手術（配線・統合）</strong> — <strong>2026-08-16 完了</strong>（残る施主ゲートは K-23/K-24 の merge 判断のみ）</p>
+<ul><li>[x] web制作の型 ⇄ design_lab の相互配線——SKILL.md に §正本の所在（11行の対応表）を新設し、工程1に AI-n の名指し、工程2に開幕宣言・編成指定・意味構造の注入文、工程3に版面三層（web職能）とモーション調律値、工程4に審美カルテ自己採点とリズムDOM診断を明記。還流の義務（裁定→台帳/カルテ/編成ログ、同型2例目→評価ログへ起案）も規定</li><li>[x] K語彙の統合——審美カルテを<strong>K-n のダイジェストへ再定義</strong>。カルテ独自番号 K1〜K9 を廃止し、行を正本ID（K-5・K-6・K-8・K-17・K-20・K-21・AI-2/3裏・AI-10裏）で呼ぶ形にして衝突を解消。受け皿が無かった2軸は <strong>K-23（層と別速度）・K-24（ためと減速）</strong>として評価ログ §蒸留の起案 に登録（根拠4例／正負2例）。施主が merge するまで「起案中」表記で先行運用</li><li>[x] <strong>編成カタログ新設</strong>——<code>.claude/skills/web制作の型/assets/編成カタログ.md</code>。節の型15（S1〜S15）／ページ編成型6（A〜F）／<strong>分散の軸5</strong>（主役の所在・縦の断ち方・情報の運び・面の使い方・素材の主権）／逸脱の規則（意味構造3枚）／禁じ手5／<strong>編成ログ</strong>（前回の編成を着工前に読む表）。3案は少なくとも2軸で値を変える規約つき</li><li>[x] 3D適用境界（回転体◎/箱物✗/有機物✗✗）を台帳へ反映——機構4の手前に表として新設。箱物は glTF 調達＋調達台帳記帳へ誘導</li><li>[x] 台帳⇄審美カルテの相互参照——台帳冒頭に「3点セットで1組」、運用規範に自己テンプレ化の禁じ手と自己採点、カルテ末尾に関連リンク</li><li>[x] web_gen_lab READMEの死亡記述整理＋収蔵物追記——「稼働中の仕組み」→「停止済みの仕組み」、実験の経過全体に歴史記録の注記、launch.json:8779（uigen-experiment・参照先消滅）を削除</li></ul>
+<p><strong>検証実験（未実施・優先順）</strong></p>
+<ul><li>[ ] 再現性n=2——別題材で定式v3をフル運用（編成3案提示から。toeiの再走が候補）</li><li>[ ] 編成カタログの効果測定——同一題材で「カタログあり/なし」の幅を比較</li><li>[ ] 意味タグの較正——台帳21機構の感覚語を施主が上書き（レポート§16）</li><li>[ ] 単体デモHTML（カタログ指差し）の方針裁定——§07と同件</li><li>[ ] 画像パイプライン開通——ssmsのcodex login（要施主のブラウザ承認）or GEMINI_API_KEY。写真主導ゾーンの天井再測定（amamaru差し替え）</li><li>[ ] Lighthouse実測・375px検証・reduced-motion全機構化（納品規範の実測値決め）</li><li>[ ] 実験1の宙吊り判定（対象ファイル消滅→再生成が要るか、放棄を宣言するか）</li><li>[ ] 実験3第2束C1〜C8の施主ピック（宙吊り）</li><li>[ ] 3層分離の法的評価（納品発生時に弁護士確認）</li><li>[ ] 本家drinkstillのGSAP実否（知的関心のみ・優先度最低）</li></ul>
+<p><strong>未決定の設計判断</strong></p>
+<ul><li>[ ] ppref線（画素起点・実案件）と今日の系統（機構翻訳・実験）を日光溶材の本納品でどう合流させるか——<strong>次の実案件がそのまま統合テストになる</strong></li><li>[ ] 「業種×目的→機構セット」マッピング表の着手時期（判断: 事例数件後のまま維持）</li><li>[ ] 評価台帳の状態拡張（3値で受からない「実装可否待ち」「部品採用・全体不採用」——design_lab側で進行中の論点）</li></ul>
+<hr>
+<h2 id="09">09. 本書の位置づけ</h2>
+<ul><li>変化のログと現在地の正本はここ。工程の正本はweb制作の型、語彙とデータの正本はdesign_lab、機構の正本はモジュール台帳、審美の携帯版は審美カルテ。</li><li>§08の手術はスキル構築セッション（<code>_system/handoff/進捗_web制作スキル構築.md</code>）の管轄。本書を読んでから着手すること。</li></ul>
+<p class="foot">
+社内の作業記録をそのまま公開したもの。検索エンジンには登録していない。<br>
+記載の企業名はデザイン実験の題材であり、各社の公式見解・依頼に基づくものではない。
+</p>
+</div>
+</body>
+</html>
