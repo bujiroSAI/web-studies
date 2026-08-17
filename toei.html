@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>東栄観光バス — 車窓</title>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<style>
+  :root{
+    --ink:#2b3230;          /* 本文の墨（緑がかった黒） */
+    --paper:#f4f2ec;        /* 生成りの地 */
+    --deep:#274437;         /* 深緑（帯・アクセント面） */
+    --acc:#c8a24a;          /* 一点の琥珀（CTAのみ） */
+    --line:#d9d5c9;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{overflow-x:clip}
+  body{background:var(--paper);color:var(--ink);
+    font-family:"Hiragino Kaku Gothic ProN","Hiragino Sans",sans-serif;
+    line-height:1.9;letter-spacing:.04em;-webkit-font-smoothing:antialiased}
+  img{max-width:100%;display:block}
+  a{color:inherit;text-decoration:none}
+
+  /* ---------- ローダー（ため→幕上げ） ---------- */
+  #loader{position:fixed;inset:0;z-index:60;background:var(--paper);
+    display:flex;align-items:center;justify-content:center;flex-direction:column;gap:18px}
+  #loader .mark{font-size:13px;letter-spacing:.42em;font-weight:600}
+  #loader .win{width:120px;height:74px;border:1.5px solid var(--ink);
+    border-radius:14px 14px 22px 22px;overflow:hidden;position:relative}
+  #loader .win i{position:absolute;inset:0;background:linear-gradient(90deg,#cfd8cf,#e8e2d2,#cfd8cf);
+    transform:translateX(-100%)}
+
+  /* ---------- 共通 ---------- */
+  .frame{width:min(94%,1280px);margin-inline:auto}
+  .read{max-width:34em}
+  .eyebrow{font-size:11px;letter-spacing:.34em;color:#7a8078;margin-bottom:18px}
+  .line{display:block;overflow:hidden}
+  .line em{display:inline-block;font-style:normal;will-change:transform}
+
+  /* ---------- ヒーロー: 車窓の窓框 ---------- */
+  #hero{height:100svh;position:relative;display:flex;align-items:center;justify-content:center}
+  #hero .window{
+    width:min(88vw,1060px);height:min(64svh,600px);
+    border-radius:26px 26px 44px 44px;   /* バスの窓の角丸 */
+    overflow:hidden;position:relative;
+    box-shadow:0 40px 90px rgba(30,40,35,.28), inset 0 0 0 6px rgba(255,255,255,.55);
+  }
+  #hero .view{position:absolute;inset:-12% 0;background:#b9c4bb center/cover no-repeat;
+    background-image:url("assets_toei2/win1_terraced.jpg");will-change:transform;transform:scale(1.18)}
+  #hero .tint{position:absolute;inset:0;background:linear-gradient(180deg,rgba(244,242,236,.10),rgba(39,68,55,.16));mix-blend-mode:multiply}
+  #hero h1{position:absolute;z-index:3;left:0;right:0;top:50%;transform:translateY(-50%);
+    color:#fdfcf8;text-align:center;font-weight:700;white-space:nowrap;
+    font-size:clamp(28px,5.6vw,82px);line-height:1.42;letter-spacing:.08em;
+    text-shadow:0 4px 40px rgba(20,30,25,.45)}
+  #hero .sub{position:absolute;z-index:3;left:50%;bottom:9%;transform:translateX(-50%);
+    color:#6a716b;font-size:13px;letter-spacing:.3em;white-space:nowrap}
+  #hero .brand{position:absolute;top:34px;left:50%;transform:translateX(-50%);
+    font-size:12px;letter-spacing:.42em;font-weight:600}
+  #scroll-cue{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);
+    font-size:10px;letter-spacing:.3em;color:#7a8078}
+
+  /* ---------- 車窓横スクロール（主役・pin+scrub） ---------- */
+  #journey{position:relative;overflow:hidden}
+  #jtrack{display:flex;height:100svh;width:max-content;will-change:transform}
+  .scene{width:100vw;height:100svh;flex:0 0 auto;position:relative;
+    display:flex;align-items:center;justify-content:center}
+  .scene .view{position:absolute;inset:0 -14%;background:center/cover no-repeat;will-change:transform}
+  .scene .veil{position:absolute;inset:0;background:linear-gradient(180deg,rgba(39,50,44,.26),rgba(39,50,44,.55))}
+  .scene .card{position:relative;z-index:2;color:#fbfaf5;width:min(86vw,560px);
+    padding:0 8px}
+  .scene .card h2{font-size:clamp(26px,3.6vw,46px);font-weight:700;letter-spacing:.1em;line-height:1.5;margin-bottom:16px}
+  .scene .card p{font-size:15px;opacity:.94}
+  .scene .no{position:absolute;z-index:2;top:10%;left:8%;color:#fbfaf5;
+    font-size:12px;letter-spacing:.3em;opacity:.85}
+  .scene .frame-line{position:absolute;inset:5% 4%;border:1px solid rgba(251,250,245,.35);
+    border-radius:20px;z-index:1;pointer-events:none}
+
+  /* ---------- 数字帯（地の反転は使わず、級数の落差で） ---------- */
+  #facts{background:var(--deep);color:#f2efe6;padding:110px 0}
+  #facts .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:48px 24px;text-align:center}
+  #facts .num{font-size:clamp(44px,6vw,88px);font-weight:700;letter-spacing:.02em;line-height:1.1;white-space:nowrap}
+  #facts .num small{font-size:.34em;letter-spacing:.2em;margin-left:6px}
+  #facts .lab{font-size:11px;letter-spacing:.3em;margin-top:10px;opacity:.75}
+
+  /* ---------- 車両・車内（左右交互スプリット） ---------- */
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:0;align-items:stretch;min-height:78svh}
+  .split.rev .photo{order:2}
+  .split .photo{position:relative;overflow:hidden}
+  .split .photo .view{position:absolute;inset:-10% 0;background:center/cover no-repeat;will-change:transform}
+  .split .text{display:flex;align-items:center;padding:9vmin}
+  .split h2{font-size:clamp(24px,2.8vw,38px);font-weight:700;letter-spacing:.12em;line-height:1.6;margin-bottom:20px}
+  .split p{font-size:15px;color:#4c534f}
+  @media(max-width:760px){.split{grid-template-columns:1fr}.split .photo{min-height:52svh}.split.rev .photo{order:0}}
+
+  /* ---------- マーキー ---------- */
+  .marquee{overflow:hidden;white-space:nowrap;border-block:1px solid var(--line);padding:20px 0;background:var(--paper)}
+  .marquee .inner{display:inline-block;animation:mq 26s linear infinite;
+    font-size:13px;letter-spacing:.4em;color:#8a9088}
+  @keyframes mq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+  /* ---------- 用途（グリッド＋右からのスライドインパネル） ---------- */
+  #purpose{padding:130px 0}
+  .sec-head{display:flex;align-items:baseline;gap:26px;margin-bottom:54px}
+  .sec-head h2{font-size:clamp(24px,3vw,40px);font-weight:700;letter-spacing:.12em}
+  .sec-head .en{font-size:11px;letter-spacing:.34em;color:#7a8078}
+  #purpose .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+  .pcell{background:var(--paper);padding:38px 30px 34px;cursor:pointer;text-align:left;
+    border:0;font:inherit;color:inherit;display:block;width:100%;
+    transition:background .25s ease}
+  .pcell:hover{background:#ece9df}
+  .pcell .pno{font-size:11px;letter-spacing:.3em;color:#7a8078}
+  .pcell h3{font-size:19px;font-weight:700;letter-spacing:.1em;margin:14px 0 8px}
+  .pcell p{font-size:13px;color:#6a716b}
+  .pcell .more{display:inline-block;margin-top:18px;font-size:11px;letter-spacing:.24em;
+    border-bottom:1px solid var(--ink);padding-bottom:3px;transition:transform .2s ease}
+  .pcell:hover .more{transform:translateX(6px)}
+
+  #ppanel-veil{position:fixed;inset:0;z-index:70;background:rgba(30,38,34,.45);
+    opacity:0;pointer-events:none;transition:opacity .35s ease}
+  #ppanel{position:fixed;top:0;right:0;bottom:0;z-index:71;width:min(92vw,480px);
+    background:var(--paper);box-shadow:-30px 0 80px rgba(20,30,25,.25);
+    transform:translateX(105%);transition:transform .5s cubic-bezier(.2,.7,.2,1);
+    padding:74px 44px 44px;overflow-y:auto}
+  body.panel-open #ppanel{transform:translateX(0)}
+  body.panel-open #ppanel-veil{opacity:1;pointer-events:auto}
+  #ppanel .close{position:absolute;top:22px;right:22px;width:40px;height:40px;border:1px solid var(--line);
+    border-radius:50%;background:none;cursor:pointer;font-size:16px;color:var(--ink)}
+  #ppanel .pno{font-size:11px;letter-spacing:.3em;color:#7a8078}
+  #ppanel h3{font-size:24px;font-weight:700;letter-spacing:.1em;margin:14px 0 18px}
+  #ppanel p{font-size:14px;color:#4c534f;margin-bottom:16px}
+  #ppanel ul{list-style:none;margin-top:8px}
+  #ppanel li{font-size:13px;padding:12px 0;border-bottom:1px solid var(--line)}
+  #ppanel li::before{content:"—";margin-right:10px;color:#9aa096}
+  .pane{display:none}.pane.on{display:block}
+  @media (prefers-reduced-motion: reduce){#ppanel{transition:none}#ppanel-veil{transition:none}}
+
+  /* ---------- 安全（番号ステップ） ---------- */
+  #safety{padding:130px 0;background:#ecebe3}
+  #safety .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:44px 30px}
+  .step .n{font-size:clamp(44px,5vw,72px);font-weight:700;line-height:1;color:#c3c9bd}
+  .step h3{font-size:16px;font-weight:700;letter-spacing:.12em;margin:14px 0 8px}
+  .step p{font-size:13px;color:#6a716b}
+
+  /* ---------- 料金（罫で組む・カードにしない） ---------- */
+  #price{padding:130px 0}
+  #price table{width:100%;border-collapse:collapse;font-size:14px}
+  #price th,#price td{padding:22px 14px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+  #price thead th{font-size:11px;letter-spacing:.26em;color:#7a8078;font-weight:600;border-bottom:2px solid var(--ink)}
+  #price .car{font-weight:700;letter-spacing:.08em}
+  #price .yen{font-size:22px;font-weight:700;white-space:nowrap}
+  #price .yen small{font-size:11px;font-weight:400;color:#7a8078;margin-left:4px}
+  #price .note{font-size:12px;color:#8a9088;margin-top:18px}
+  #price .tw{overflow-x:auto}
+
+  /* ---------- FAQ（アコーディオン=触って応える） ---------- */
+  #faq{padding:130px 0;background:#ecebe3}
+  #faq details{border-bottom:1px solid #d3d1c5}
+  #faq summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;
+    padding:26px 6px;font-size:15px;font-weight:700;letter-spacing:.06em}
+  #faq summary::-webkit-details-marker{display:none}
+  #faq summary .ic{width:26px;height:26px;flex:0 0 auto;position:relative;margin-left:20px}
+  #faq summary .ic::before,#faq summary .ic::after{content:"";position:absolute;inset:50% auto auto 50%;
+    width:14px;height:1.5px;background:var(--ink);transform:translate(-50%,-50%)}
+  #faq summary .ic::after{transform:translate(-50%,-50%) rotate(90deg);transition:transform .3s ease}
+  #faq details[open] summary .ic::after{transform:translate(-50%,-50%) rotate(0deg)}
+  #faq .a{overflow:hidden;font-size:14px;color:#4c534f;padding:0 6px}
+  #faq .a p{padding-bottom:26px;max-width:44em}
+
+  /* ---------- 路線図ライン描画（準主役・pin+scrub 2箇所目） ---------- */
+  #route{position:relative}
+  #route .stage{height:100svh;display:flex;flex-direction:column;justify-content:center}
+  #route svg{width:min(94%,1200px);margin-inline:auto;display:block;overflow:visible}
+  #rpath{stroke:var(--ink);stroke-width:2.5;fill:none;stroke-linecap:round;
+    stroke-dasharray:8 10}                 /* 点線の道路 */
+  #rdraw{stroke:var(--deep);stroke-width:3.5;fill:none;stroke-linecap:round}
+  .rstop circle{fill:var(--paper);stroke:var(--ink);stroke-width:2;transition:fill .4s ease}
+  .rstop.on circle{fill:var(--deep);stroke:var(--deep)}
+  .rstop text{font-size:15px;letter-spacing:.12em;fill:#8a9088;font-weight:600;transition:fill .4s ease}
+  .rstop.on text{fill:var(--ink)}
+  #rbus{fill:var(--ink)}
+  @media(max-width:640px){
+    .rstop text{font-size:34px}
+    .rstop circle{r:13}
+    #rbus{r:15}
+    #rpath,#rdraw{stroke-width:5}
+  }
+
+  /* ---------- 理念の色塗り（文字分割×カラースクラブ・pinなし） ---------- */
+  #credo{padding:190px 0 170px}
+  #credo .credo-line{font-size:clamp(30px,4.6vw,64px);font-weight:700;letter-spacing:.1em;
+    line-height:1.7;text-align:center;color:#d5d2c6}   /* 未読の淡色（JSが1字ずつ墨へ塗る） */
+  #credo .credo-line span{display:inline-block}
+  #credo .sig{text-align:center;margin-top:30px;font-size:11px;letter-spacing:.34em;color:#8a9088}
+
+  /* ---------- 旅の記録（ドラッグ無限スライダー） ---------- */
+  #gallery{padding:130px 0;overflow:hidden}
+  #gallery .sec-head{width:min(94%,1280px);margin-inline:auto}
+  #gtrack{display:flex;gap:18px;width:max-content;padding:6px 0;cursor:grab;touch-action:pan-y}
+  #gtrack:active{cursor:grabbing}
+  #gtrack figure{width:clamp(240px,30vw,420px);flex:0 0 auto;user-select:none}
+  #gtrack .ph{aspect-ratio:4/3;border-radius:16px;overflow:hidden;background:center/cover no-repeat;
+    filter:saturate(.85)}
+  #gtrack figcaption{font-size:11px;letter-spacing:.24em;color:#8a9088;margin-top:12px}
+  #drag-badge{position:fixed;z-index:40;width:76px;height:76px;border-radius:50%;
+    background:rgba(39,68,55,.88);color:#f2efe6;display:flex;align-items:center;justify-content:center;
+    font-size:10px;letter-spacing:.26em;pointer-events:none;opacity:0;transform:translate(-50%,-50%);
+    transition:opacity .25s ease}
+  @media(hover:none){#drag-badge{display:none}}
+
+  /* ---------- 会社概要（表組み） ---------- */
+  #company{padding:130px 0}
+  #company dl{display:grid;grid-template-columns:160px 1fr;font-size:14px}
+  #company dt{padding:18px 0;border-bottom:1px solid var(--line);color:#7a8078;letter-spacing:.14em;font-size:12px}
+  #company dd{padding:18px 0;border-bottom:1px solid var(--line)}
+  @media(max-width:640px){#company dl{grid-template-columns:1fr}#company dt{border-bottom:0;padding-bottom:2px}}
+
+  /* ---------- CTA ---------- */
+  #cta{padding:140px 0 120px;text-align:center}
+  #cta h2{font-size:clamp(21px,4vw,52px);font-weight:700;letter-spacing:.1em;margin-bottom:18px}
+  #cta p{color:#6a716b;font-size:14px;margin-bottom:44px}
+  .btn{display:inline-block;background:var(--acc);color:#241f12;font-weight:700;
+    font-size:14px;letter-spacing:.2em;padding:20px 58px;border-radius:999px;
+    box-shadow:0 14px 34px rgba(200,162,74,.35)}
+  footer{padding:38px 0;border-top:1px solid var(--line);text-align:center;
+    font-size:11px;letter-spacing:.3em;color:#8a9088}
+
+  @media (prefers-reduced-motion: reduce){
+    .line em{transform:none!important}
+    .marquee .inner{animation:none}
+    #loader{display:none}
+  }
+
+  /* ---------- flatモード（?flat=1・headlessスクショ検証用の静的展開） ---------- */
+  .flat #loader{display:none}
+  .flat #hero{height:820px}
+  .flat #jtrack{flex-direction:column;height:auto;width:100%}
+  .flat .scene{width:100%;height:820px}
+  .flat .split{min-height:620px}
+  .flat .split .photo{min-height:420px}
+  .flat .line em{transform:none!important}
+  .flat #route .stage{height:auto;padding:130px 0}
+  .flat #credo .credo-line{color:var(--ink)}
+</style>
+</head>
+<body>
+
+<div id="loader" aria-hidden="true">
+  <div class="mark">TOEI KANKO BUS</div>
+  <div class="win"><i id="lfill"></i></div>
+</div>
+
+<!-- ヒーロー: 車窓（引きズームの「ため」） -->
+<section id="hero">
+  <div class="brand">東栄観光バス</div>
+  <div class="window">
+    <div class="view" id="hero-view"></div>
+    <div class="tint"></div>
+  </div>
+  <h1>
+    <span class="line"><em>窓のむこうに、</em></span>
+    <span class="line"><em>今日がひらく。</em></span>
+  </h1>
+  <div class="sub">貸切観光バス — 安全と、景色のちからで。</div>
+  <div id="scroll-cue">SCROLL</div>
+</section>
+
+<div class="marquee"><span class="inner">
+  貸切バス・社員旅行・冠婚葬祭送迎・視察研修・合宿輸送・空港送迎　—
+  貸切バス・社員旅行・冠婚葬祭送迎・視察研修・合宿輸送・空港送迎　—
+</span></div>
+
+<!-- 主役: 車窓の旅（横スクロール pin+scrub） -->
+<section id="journey">
+  <div id="jtrack">
+    <div class="scene">
+      <div class="view" style="background-image:url('assets_toei2/win1_terraced.jpg')"></div>
+      <div class="veil"></div><div class="frame-line"></div>
+      <div class="no">SCENE 01 — 朝</div>
+      <div class="card">
+        <h2>出発は、<br>静かな朝から。</h2>
+        <p>集合場所までお迎えに上がります。棚田の朝霧を抜ける頃には、車内はもう旅のリズム。行程はすべて事前打ち合わせ済み——運転はお任せください。</p>
+      </div>
+    </div>
+    <div class="scene">
+      <div class="view" style="background-image:url('assets_toei2/win2_coast.jpg')"></div>
+      <div class="veil"></div><div class="frame-line"></div>
+      <div class="no">SCENE 02 — 海沿い</div>
+      <div class="card">
+        <h2>道のりも、<br>行程のうち。</h2>
+        <p>海沿いの一般道か、時間優先の高速か。目的に合わせてルートをご提案します。休憩地・写真スポットの調整もドライバーにご相談ください。</p>
+      </div>
+    </div>
+    <div class="scene">
+      <div class="view" style="background-image:url('assets_toei2/win3_town.jpg')"></div>
+      <div class="veil"></div><div class="frame-line"></div>
+      <div class="no">SCENE 03 — 夕暮れ</div>
+      <div class="card">
+        <h2>帰り道まで、<br>まかせて安心。</h2>
+        <p>夜間走行は交替要員・運行管理者の点呼体制で。全車ドライブレコーダー・衝突被害軽減ブレーキ搭載。眠って帰れるのが、貸切の贅沢です。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 数字（カウントアップ） -->
+<section id="facts">
+  <div class="frame grid">
+    <div><div class="num" data-count="52"><span>0</span><small>年</small></div><div class="lab">創業からの歩み</div></div>
+    <div><div class="num" data-count="18"><span>0</span><small>台</small></div><div class="lab">保有車両</div></div>
+    <div><div class="num" data-count="34"><span>0</span><small>名</small></div><div class="lab">所属乗務員</div></div>
+    <div><div class="num" data-count="12000"><span>0</span><small>件</small></div><div class="lab">累計運行実績</div></div>
+  </div>
+</section>
+
+<!-- 路線図（準主役: SVGライン描画 pin+scrub） -->
+<section id="route">
+  <div class="stage">
+    <div class="frame"><div class="sec-head"><h2>この一台で、どこまでも。</h2><span class="en">ROUTES</span></div></div>
+    <svg viewBox="0 0 1200 560" aria-label="行き先の路線図">
+      <path id="rpath" d="M 90 500 C 280 440, 200 320, 390 290 S 660 380, 780 280 S 950 130, 1120 100"/>
+      <path id="rdraw" d="M 90 500 C 280 440, 200 320, 390 290 S 660 380, 780 280 S 950 130, 1120 100"/>
+      <g id="rstops"></g>
+      <circle id="rbus" r="8"/>
+    </svg>
+  </div>
+</section>
+
+<!-- 車両 -->
+<section class="split">
+  <div class="photo"><div class="view" style="background-image:url('assets_toei2/bus_side.jpg')"></div></div>
+  <div class="text"><div>
+    <div class="eyebrow">FLEET</div>
+    <h2>大型から中型まで、<br>行程に合う一台を。</h2>
+    <p class="read">大型（正席53）・中型（正席27）・マイクロ（正席21）を保有。全車に後付けでない標準装備として、衝突被害軽減ブレーキ・ドライブレコーダー・AED を搭載しています。</p>
+  </div></div>
+</section>
+
+<!-- 車内 -->
+<section class="split rev">
+  <div class="photo"><div class="view" style="background-image:url('assets_toei2/interior.jpg')"></div></div>
+  <div class="text"><div>
+    <div class="eyebrow">CABIN</div>
+    <h2>座席は、旅の客室。</h2>
+    <p class="read">リクライニング・USB電源・大型トランク。長距離でも疲れにくい座席配置と、換気を常時確認する運行基準で、車内の時間そのものを快適に設計しています。</p>
+  </div></div>
+</section>
+
+<div class="marquee"><span class="inner">
+  SAFETY FIRST — 貸切バス事業者安全性評価認定・全車点呼記録・適性診断受診率100%
+  SAFETY FIRST — 貸切バス事業者安全性評価認定・全車点呼記録・適性診断受診率100%
+</span></div>
+
+<!-- 用途（クリック→右からパネル） -->
+<section id="purpose">
+  <div class="frame">
+    <div class="sec-head"><h2>ご利用シーン</h2><span class="en">PURPOSE</span></div>
+    <div class="grid">
+      <button class="pcell" data-open="p1"><span class="pno">01</span><h3>社員旅行・研修</h3><p>集合から解散まで、幹事の負担を運転ごと引き受けます。</p><span class="more">くわしく</span></button>
+      <button class="pcell" data-open="p2"><span class="pno">02</span><h3>冠婚葬祭の送迎</h3><p>式場・斎場への確実な送迎。服装規定に沿った乗務も。</p><span class="more">くわしく</span></button>
+      <button class="pcell" data-open="p3"><span class="pno">03</span><h3>視察・団体見学</h3><p>行程表に沿った定時運行。複数拠点の巡回に強い。</p><span class="more">くわしく</span></button>
+      <button class="pcell" data-open="p4"><span class="pno">04</span><h3>部活・合宿輸送</h3><p>機材・楽器もトランクへ。早朝発・深夜着も相談可。</p><span class="more">くわしく</span></button>
+    </div>
+  </div>
+</section>
+
+<div id="ppanel-veil"></div>
+<aside id="ppanel" aria-hidden="true">
+  <button class="close" aria-label="閉じる">✕</button>
+  <div class="pane" data-pane="p1"><span class="pno">01 — 社員旅行・研修</span><h3>幹事の仕事を、半分に。</h3>
+    <p>出発地から目的地まで、行程の運転をすべて引き受けます。乗車名簿・座席表のテンプレートもご用意。二次会場への分乗など、当日の変更にも柔軟に対応します。</p>
+    <ul><li>行程表の事前打ち合わせ（無料）</li><li>座席表・名簿テンプレート提供</li><li>車内マイク・モニター利用可</li><li>立ち寄り地の追加は当日相談可</li></ul></div>
+  <div class="pane" data-pane="p2"><span class="pno">02 — 冠婚葬祭の送迎</span><h3>大切な日の、確実な足。</h3>
+    <p>式場・斎場・駅間の送迎を、時間厳守で。ご高齢の方の乗降補助、複数便のピストン運行にも対応します。</p>
+    <ul><li>黒服での乗務に対応</li><li>乗降のステップ台をご用意</li><li>待機・複数便の運行可</li></ul></div>
+  <div class="pane" data-pane="p3"><span class="pno">03 — 視察・団体見学</span><h3>分刻みの行程も、定時で。</h3>
+    <p>工場・施設の複数拠点巡回など、時間管理が要の行程に。運行管理者が事前にルートと待機場所を下見調整します。</p>
+    <ul><li>複数拠点の巡回設計</li><li>大型駐車場の事前確保</li><li>車内での資料配布・説明に対応</li></ul></div>
+  <div class="pane" data-pane="p4"><span class="pno">04 — 部活・合宿輸送</span><h3>機材ごと、まとめて。</h3>
+    <p>楽器・スポーツ機材は床下トランクへ。早朝出発・深夜帰着、長期の往復契約もご相談ください。</p>
+    <ul><li>大容量床下トランク</li><li>早朝・深夜の発着に対応</li><li>シーズン往復契約の割引</li></ul></div>
+</aside>
+
+<!-- 理念（文字分割×カラースクラブ） -->
+<section id="credo">
+  <div class="frame">
+    <p class="credo-line">まかせる安心が、<br>ながめる余白をつくる。</p>
+    <div class="sig">TOEI KANKO BUS — CREDO</div>
+  </div>
+</section>
+
+<!-- 安全（番号ステップ） -->
+<section id="safety">
+  <div class="frame">
+    <div class="sec-head"><h2>安全のしくみ</h2><span class="en">SAFETY</span></div>
+    <div class="steps">
+      <div class="step"><div class="n">01</div><h3>出発前の点呼</h3><p>運行管理者が全乗務員に対面点呼。アルコールチェックと健康確認を記録に残します。</p></div>
+      <div class="step"><div class="n">02</div><h3>日常・定期点検</h3><p>出庫前の日常点検に加え、3ヶ月ごとの法定点検を自社整備場で実施します。</p></div>
+      <div class="step"><div class="n">03</div><h3>運行中の見守り</h3><p>全車ドライブレコーダー・衝突被害軽減ブレーキ搭載。長距離は交替運転士が同乗します。</p></div>
+      <div class="step"><div class="n">04</div><h3>万一への備え</h3><p>全車AED搭載。対人・対物無制限の任意保険に加入しています。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 料金（罫の表） -->
+<section id="price">
+  <div class="frame">
+    <div class="sec-head"><h2>料金の目安</h2><span class="en">PRICE</span></div>
+    <div class="tw"><table>
+      <thead><tr><th>車種</th><th>定員</th><th>日帰り（8時間・100km）</th><th>向いている用途</th></tr></thead>
+      <tbody>
+        <tr><td class="car">大型バス</td><td>正席53</td><td class="yen">88,000円<small>〜（税込）</small></td><td>社員旅行・大人数の送迎</td></tr>
+        <tr><td class="car">中型バス</td><td>正席27</td><td class="yen">71,500円<small>〜（税込）</small></td><td>視察・少人数の団体</td></tr>
+        <tr><td class="car">マイクロバス</td><td>正席21</td><td class="yen">60,500円<small>〜（税込）</small></td><td>合宿・近距離の送迎</td></tr>
+      </tbody>
+    </table></div>
+    <p class="note">※ 時間・距離・時期により変動します。国の公示運賃に基づき、お見積もりで確定額をご提示します。</p>
+  </div>
+</section>
+
+<!-- 旅の記録（ドラッグ無限スライダー） -->
+<section id="gallery">
+  <div class="sec-head"><h2>旅の記録</h2><span class="en">GALLERY — DRAG</span></div>
+  <div id="gtrack">
+    <figure><div class="ph" style="background-image:url('assets_toei2/win1_terraced.jpg')"></div><figcaption>05:40 — 棚田の朝霧</figcaption></figure>
+    <figure><div class="ph" style="background-image:url('assets_toei2/win2_coast.jpg')"></div><figcaption>10:20 — 海沿いの国道</figcaption></figure>
+    <figure><div class="ph" style="background-image:url('assets_toei2/sky.jpg')"></div><figcaption>12:00 — 峠の空</figcaption></figure>
+    <figure><div class="ph" style="background-image:url('assets_toei2/win3_town.jpg')"></div><figcaption>17:30 — 宿場町の夕暮れ</figcaption></figure>
+    <figure><div class="ph" style="background-image:url('assets_toei2/interior.jpg')"></div><figcaption>19:00 — 帰りの車内</figcaption></figure>
+    <figure><div class="ph" style="background-image:url('assets_toei2/bus_side.jpg')"></div><figcaption>20:10 — 車庫にて</figcaption></figure>
+  </div>
+  <div id="drag-badge">DRAG</div>
+</section>
+
+<!-- FAQ（アコーディオン） -->
+<section id="faq">
+  <div class="frame">
+    <div class="sec-head"><h2>よくあるご質問</h2><span class="en">FAQ</span></div>
+    <details><summary>何日前までに予約が必要ですか？<span class="ic"></span></summary><div class="a"><p>空車があれば前日でも承りますが、繁忙期（4〜6月・10〜11月）は1ヶ月前のご予約をおすすめします。</p></div></details>
+    <details><summary>ガイドは同乗できますか？<span class="ic"></span></summary><div class="a"><p>バスガイドの手配が可能です（有料オプション）。車内マイクは全車標準装備なので、幹事様ご自身での案内にもご利用いただけます。</p></div></details>
+    <details><summary>雨天やキャンセルの場合の料金は？<span class="ic"></span></summary><div class="a"><p>運行の14日前まで無料。以降は国の基準に沿ったキャンセル料（運賃の20〜50%）を申し受けます。</p></div></details>
+    <details><summary>車内での飲食はできますか？<span class="ic"></span></summary><div class="a"><p>可能です。ゴミ袋をご用意しています。アルコールは行程と貸切主様の方針に沿って事前にご相談ください。</p></div></details>
+  </div>
+</section>
+
+<!-- 会社概要（表組み） -->
+<section id="company">
+  <div class="frame">
+    <div class="sec-head"><h2>会社概要</h2><span class="en">COMPANY</span></div>
+    <dl>
+      <dt>商号</dt><dd>東栄観光バス株式会社（実験用の架空社名）</dd>
+      <dt>創業</dt><dd>1974年</dd>
+      <dt>事業内容</dt><dd>一般貸切旅客自動車運送事業</dd>
+      <dt>保有車両</dt><dd>大型8台・中型6台・マイクロ4台（計18台）</dd>
+      <dt>認定</dt><dd>貸切バス事業者安全性評価認定</dd>
+    </dl>
+  </div>
+</section>
+
+<!-- CTA（一点の琥珀） -->
+<section id="cta">
+  <div class="frame">
+    <h2>まずは、行き先だけでも。</h2>
+    <p>日程・人数・ご予算から、最適な車両と行程をご提案します。</p>
+    <a class="btn" href="#">見積もりを依頼する</a>
+  </div>
+</section>
+
+<footer>© TOEI KANKO BUS — 実験用モック（デザイン実験・限定共有）</footer>
+
+<script>
+gsap.registerPlugin(ScrollTrigger);
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* flatモード: 全アニメ停止・縦静的展開（headlessスクショ検証用） */
+const FLAT = new URLSearchParams(location.search).has('flat');
+if (FLAT) {
+  document.documentElement.classList.add('flat');
+  document.querySelectorAll('[data-count]').forEach(el => {
+    el.querySelector('span').textContent = (+el.dataset.count).toLocaleString();
+  });
+}
+
+/* Lenis×ScrollTrigger 統合（台帳・共通基盤の4行） */
+const lenis = FLAT ? null : new Lenis({ lerp: 0.09 });
+if (!FLAT) {
+  lenis.on('scroll', ScrollTrigger.update);
+  gsap.ticker.add(t => lenis.raf(t * 1000));
+  gsap.ticker.lagSmoothing(0);
+}
+
+/* ---------- 用途パネル（クリック→右からスライドイン。CSS transitionのみ・FLATでも動作） ---------- */
+const ppanel = document.getElementById('ppanel');
+function openPanel(id){
+  ppanel.querySelectorAll('.pane').forEach(pn => pn.classList.toggle('on', pn.dataset.pane === id));
+  document.body.classList.add('panel-open');
+  ppanel.setAttribute('aria-hidden', 'false');
+  if (lenis) lenis.stop();
+}
+function closePanel(){
+  document.body.classList.remove('panel-open');
+  ppanel.setAttribute('aria-hidden', 'true');
+  if (lenis) lenis.start();
+}
+document.querySelectorAll('[data-open]').forEach(b => b.addEventListener('click', () => openPanel(b.dataset.open)));
+ppanel.querySelector('.close').addEventListener('click', closePanel);
+document.getElementById('ppanel-veil').addEventListener('click', closePanel);
+addEventListener('keydown', e => { if (e.key === 'Escape') closePanel(); });
+
+/* ---------- 路線図: 停留点をpath上に生成（共有・flatは完成形を表示） ---------- */
+const rdraw = document.getElementById('rdraw'), rbus = document.getElementById('rbus');
+const RL = rdraw.getTotalLength();
+const STOPS = [[0.02,'本社営業所'],[0.28,'高原の湖'],[0.52,'港の市場'],[0.76,'温泉郷'],[0.97,'霊峰ロープウェイ']];
+const rstops = STOPS.map(([f, name]) => {
+  const pt = rdraw.getPointAtLength(RL * f);
+  const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+  g.setAttribute('class', 'rstop');
+  const anchor = f > 0.85 ? `text-anchor="end" x="${pt.x - 16}"` : `x="${pt.x + 16}"`;
+  g.innerHTML = `<circle cx="${pt.x}" cy="${pt.y}" r="7"></circle><text ${anchor} y="${pt.y - 16}">${name}</text>`;
+  document.getElementById('rstops').appendChild(g);
+  return { g, f };
+});
+function setRoute(p){
+  rdraw.style.strokeDashoffset = RL * (1 - p);
+  const bp = rdraw.getPointAtLength(RL * Math.max(0.001, Math.min(p, 1)));
+  rbus.setAttribute('cx', bp.x); rbus.setAttribute('cy', bp.y);
+  rstops.forEach(s => s.g.classList.toggle('on', p >= s.f));
+}
+rdraw.style.strokeDasharray = RL;
+if (FLAT || reduced) setRoute(1);
+
+/* ---------- 理念: 1字ずつspanに分割（共有） ---------- */
+const credoLine = document.querySelector('.credo-line');
+{
+  const frag = document.createDocumentFragment();
+  [...credoLine.childNodes].forEach(n => {
+    if (n.nodeType === 3) [...n.textContent].forEach(ch => {
+      const s = document.createElement('span'); s.textContent = ch; frag.appendChild(s);
+    });
+    else frag.appendChild(n.cloneNode(false));
+  });
+  credoLine.textContent = ''; credoLine.appendChild(frag);
+}
+if (reduced) credoLine.style.color = 'var(--ink)';
+
+if (!FLAT) {
+
+/* ---------- ローダー: 窓が満ちる→幕上げ→ヒーロー入場 ---------- */
+function intro(){
+  const tl = gsap.timeline({ defaults:{ ease:'power3.inOut' } });
+  if (reduced) tl.timeScale(3);
+  lenis.stop();
+  tl.to('#lfill', { xPercent: 100, duration: 1.4, ease: 'power2.inOut' })
+    .to('#loader', { yPercent: -100, duration: .9, ease: 'power4.inOut' })
+    .set('#loader', { display: 'none' })
+    .add(() => lenis.start(), '<')
+    .from('#hero .window', { scale: .92, opacity: 0, duration: 1.1, ease: 'power3.out' }, '<')
+    .to('#hero .line em', { yPercent: 0, duration: 1, stagger: .12, ease: 'power4.out' }, '<+.2');
+}
+gsap.set('#hero .line em', { yPercent: 110 });
+document.fonts.ready.then(intro);
+
+/* ヒーローの「ため」: 窓の中をゆっくり引きズーム（1.18→1.0）+ 出発の横流れ */
+gsap.to('#hero-view', {
+  scale: 1.0, xPercent: -6, ease: 'none',
+  scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: 1 }
+});
+
+/* ---------- 主役: 横スクロール（pin+scrub・車窓） ---------- */
+const track = document.getElementById('jtrack');
+const scenes = gsap.utils.toArray('.scene');
+const jtween = gsap.to(track, {
+  xPercent: -100 * (scenes.length - 1) / scenes.length, ease: 'none',
+  scrollTrigger: {
+    trigger: '#journey', start: 'top top',
+    end: () => '+=' + (track.offsetWidth - innerWidth),
+    pin: true, scrub: 1, invalidateOnRefresh: true
+  }
+});
+/* 窓外パララックス: 風景はカードの8割の速度で流れる（速度差=奥行き） */
+scenes.forEach(sc => {
+  gsap.fromTo(sc.querySelector('.view'), { xPercent: -7 }, { xPercent: 7, ease: 'none',
+    scrollTrigger: { trigger: sc, containerAnimation: jtween, start: 'left right', end: 'right left', scrub: true } });
+  gsap.from(sc.querySelector('.card'), { y: 50, opacity: 0, duration: .8, ease: 'power3.out',
+    scrollTrigger: { trigger: sc, containerAnimation: jtween, start: 'left 55%' } });
+});
+
+/* ---------- 縦セクションのパララックス（±8%規範） ---------- */
+gsap.utils.toArray('.split .view').forEach(v => {
+  if (reduced) return;
+  gsap.fromTo(v, { yPercent: 6 }, { yPercent: -6, ease: 'none',
+    scrollTrigger: { trigger: v.parentElement, start: 'top bottom', end: 'bottom top', scrub: true } });
+});
+
+/* ---------- カウントアップ（once） ---------- */
+gsap.utils.toArray('[data-count]').forEach(el => {
+  const span = el.querySelector('span'), target = +el.dataset.count, obj = { v: 0 };
+  ScrollTrigger.create({ trigger: el, start: 'top 88%', once: true,
+    onEnter: () => gsap.to(obj, { v: target, duration: reduced ? 0 : 1.6, ease: 'power2.out',
+      onUpdate: () => span.textContent = Math.round(obj.v).toLocaleString() }) });
+});
+
+/* ---------- 出現（split の見出し） ---------- */
+gsap.utils.toArray('.split .text > div').forEach(t => {
+  gsap.from(t, { y: 40, opacity: 0, duration: .9, ease: 'power3.out',
+    scrollTrigger: { trigger: t, start: 'top 78%' } });
+});
+
+/* ---------- 出現（後半セクションの見出し＋グリッド。stagger 6個で打ち切り） ---------- */
+gsap.utils.toArray('.sec-head').forEach(h => {
+  gsap.from(h, { y: 32, opacity: 0, duration: .7, ease: 'power3.out',
+    scrollTrigger: { trigger: h, start: 'top 82%' } });
+});
+[['#purpose .pcell'], ['#safety .step']].forEach(([sel]) => {
+  const items = gsap.utils.toArray(sel);
+  gsap.from(items, { y: 36, opacity: 0, duration: .7, stagger: .08, ease: 'power3.out',
+    scrollTrigger: { trigger: items[0], start: 'top 84%' } });
+});
+
+/* ---------- 路線図の描画駆動（pin+scrub・2箇所目/上限2） ---------- */
+if (!reduced) {
+  setRoute(0);
+  const rp = { p: 0 };
+  gsap.to(rp, { p: 1, ease: 'none', onUpdate: () => setRoute(rp.p),
+    scrollTrigger: { trigger: '#route .stage', start: 'top top', end: '+=160%', pin: true, scrub: 1 } });
+}
+
+/* ---------- 理念のカラースクラブ（pinなし・読む速度をスクロールが握る） ---------- */
+if (!reduced) {
+  gsap.to('.credo-line span', { color: '#2b3230', ease: 'none', duration: 2, stagger: 0.35,
+    scrollTrigger: { trigger: '#credo', start: 'top 72%', end: 'bottom 58%', scrub: 1 } });
+}
+
+/* ---------- 旅の記録: ドラッグ無限スライダー（慣性つき・台帳19の実証） ---------- */
+{
+  const gtrack = document.getElementById('gtrack');
+  gtrack.innerHTML += gtrack.innerHTML;              // 2セット連結でループの継ぎ目を消す
+  let half = 0;
+  const measure = () => { half = gtrack.scrollWidth / 2; };
+  measure(); addEventListener('resize', measure);
+  let pos = 0, dragging = false, lastX = 0, vel = 0, inertia = null;
+  const apply = () => { gtrack.style.transform = `translateX(${-(((pos % half) + half) % half)}px)`; };
+  gtrack.addEventListener('pointerdown', e => {
+    dragging = true; lastX = e.clientX; vel = 0;
+    if (inertia) inertia.kill();
+    gtrack.setPointerCapture(e.pointerId);
+  });
+  addEventListener('pointermove', e => {
+    if (!dragging) return;
+    const dx = e.clientX - lastX; lastX = e.clientX; pos -= dx; vel = dx;
+  });
+  addEventListener('pointerup', () => {
+    if (!dragging) return; dragging = false;
+    const iv = { v: vel };
+    inertia = gsap.to(iv, { v: 0, duration: 1.2, ease: 'power2.out', onUpdate: () => { pos -= iv.v; } });
+  });
+  gsap.ticker.add(() => { if (!dragging && !reduced) pos += 0.35; apply(); });  // 自動ドリフト（マーキーの親戚）
+  /* DRAGバッジ（カーソル追従・hover環境のみ） */
+  const badge = document.getElementById('drag-badge'), gal = document.getElementById('gallery');
+  gal.addEventListener('mousemove', e => {
+    badge.style.left = e.clientX + 'px'; badge.style.top = e.clientY + 'px'; badge.style.opacity = 1;
+  });
+  gal.addEventListener('mouseleave', () => badge.style.opacity = 0);
+}
+
+} /* end !FLAT */
+</script>
+</body>
+</html>

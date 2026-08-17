@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YOKAI — lookbook vol.0</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Klee+One:wght@400;600&family=Shippori+Mincho:wght@400;500&family=Space+Mono:wght@400;700&family=Zen+Kaku+Gothic+New:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --milk:#F5F5F2;        /* 乳白 */
+  --glass:#DDE7E5;       /* 淡いガラス */
+  --aqua:#C5D8D6;        /* 薄い海 */
+  --mist:#E8EDEC;        /* 靄 */
+  --sand:#EAE4D8;        /* 砂 */
+  --ink:#41403C;         /* 柔らかい墨 */
+  --faint:#6E7069;       /* キャプション */
+  --line:#D8D8D2;
+  --brick:#A8492B;       /* レンガ（土着） */
+  --oxblood:#6E2A1C;     /* 酸化した赤（シュナーベル） */
+  --ochre:#C68A3E;       /* 黄土 */
+  --dark:#1B1713;        /* 街の夜（テック面の地） */
+  --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html.lenis{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto}
+body{
+  background:var(--milk);color:var(--ink);
+  font-family:'Zen Kaku Gothic New',sans-serif;font-weight:300;
+  font-size:.92rem;line-height:2.15;letter-spacing:.04em;
+  overflow-x:hidden;
+}
+::selection{background:var(--aqua);color:var(--ink)}
+a{color:inherit}
+:focus-visible{outline:1.5px solid var(--ink);outline-offset:4px}
+.serif{font-family:'Cormorant Garamond',serif}
+.mincho{font-family:'Shippori Mincho',serif}
+.cap{
+  font-size:.66rem;letter-spacing:.26em;color:var(--faint);
+  text-transform:uppercase;font-weight:400;
+}
+.mono{font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;line-height:1.9}
+.wrap{max-width:1200px;margin-inline:auto;padding-inline:clamp(1.4rem,5vw,4rem)}
+
+/* ───────── 粒子（全図版共通） ───────── */
+.ph{position:absolute;inset:0;overflow:hidden}
+.ph .img{position:absolute;inset:-14% 0;will-change:transform}
+.ph::after{
+  content:"";position:absolute;inset:0;background-image:var(--grain);
+  background-size:300px 300px;opacity:.5;mix-blend-mode:overlay;pointer-events:none;
+}
+
+/* ───────── HERO ───────── */
+#hero{position:relative;height:100svh}
+#hero .img{
+  background:
+    radial-gradient(ellipse 60% 26% at 50% 47%,rgba(255,255,255,.85),transparent 70%),
+    linear-gradient(180deg,#EBEFF0 0%,#DDE7EA 32%,#C3D4DA 46%,#CFDCE0 52%,#DFE7E7 68%,#EFF0EC 100%);
+}
+#hero .slide{
+  position:absolute;inset:0;background-position:center;background-size:cover;
+  opacity:0;transition:opacity 1.8s ease;will-change:opacity,transform;
+}
+#hero .slide.on{opacity:1}
+#hero .slide.s1{background-image:url("img/hero1.jpg")}
+#hero .slide.s2{background-image:url("img/street1.jpg")}
+#hero .slide.s3{background-image:url("img/street2.jpg")}
+#hero::after{
+  content:"";position:absolute;inset:0;background-image:var(--grain);
+  background-size:300px 300px;opacity:.62;mix-blend-mode:overlay;pointer-events:none;
+}
+#hero .mast{
+  position:absolute;top:clamp(1.6rem,4vh,3rem);left:0;right:0;text-align:center;z-index:2;
+  text-shadow:0 0 16px rgba(255,255,252,.9),0 0 5px rgba(255,255,252,.7);
+}
+#hero .mast .wordmark{
+  font-family:'Cormorant Garamond',serif;font-weight:400;
+  font-size:clamp(1.3rem,2.4vw,1.9rem);letter-spacing:.58em;text-indent:.58em;
+}
+#hero .mast .vol{display:block;margin-top:.7em;font-size:.6rem;letter-spacing:.32em;color:var(--faint)}
+#hero .foot{
+  position:absolute;left:clamp(1.4rem,5vw,4rem);bottom:clamp(1.6rem,4vh,3rem);z-index:2;
+  text-shadow:0 0 18px rgba(255,255,252,.95),0 0 6px rgba(255,255,252,.8);
+}
+#hero .foot .jp{font-family:'Shippori Mincho',serif;font-size:clamp(.95rem,1.6vw,1.2rem);letter-spacing:.3em}
+#hero .foot .en{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.85rem;color:var(--faint);margin-top:.5em;letter-spacing:.12em}
+#hero .cue{
+  position:absolute;right:clamp(1.4rem,5vw,4rem);bottom:clamp(1.6rem,4vh,3rem);z-index:2;
+  font-size:.6rem;letter-spacing:.3em;color:var(--faint);text-transform:uppercase;
+  display:flex;align-items:center;gap:.9em;
+  text-shadow:0 0 14px rgba(255,255,252,.9);
+}
+#hero .cue::after{content:"";width:1px;height:3.4em;background:var(--faint);opacity:.6}
+
+/* ───────── PRODUCT（pin+scrub 回転） ───────── */
+#product{position:relative}
+#product .stage{height:100svh;position:relative;overflow:hidden;background:linear-gradient(180deg,var(--milk),var(--mist) 60%,var(--milk))}
+#product .stage::after{
+  content:"";position:absolute;inset:0;background-image:var(--grain);
+  background-size:300px 300px;opacity:.35;mix-blend-mode:overlay;pointer-events:none;
+}
+/* 機能レール（Apple型: 中央の項目が大きく・外れると縮む。ガラス風ピル） */
+#featrail{position:absolute;z-index:4;right:clamp(1.2rem,4.5vw,4.2rem);top:50%;width:min(330px,30vw);height:0}
+.fpill{
+  position:absolute;top:0;right:0;width:100%;
+  border-radius:22px;padding:.85rem 1.2rem;color:var(--ink);
+  background:rgba(252,252,249,.62);
+  -webkit-backdrop-filter:blur(16px) saturate(1.1);backdrop-filter:blur(16px) saturate(1.1);
+  border:1px solid rgba(255,255,255,.78);
+  box-shadow:0 6px 24px rgba(40,35,28,.10), inset 0 1px 0 rgba(255,255,255,.85);
+  transform-origin:100% 50%;will-change:transform;
+}
+.fpill.on{box-shadow:0 14px 40px rgba(40,35,28,.16), inset 0 1px 0 rgba(255,255,255,.95)}
+.fpill .fk{
+  display:block;font-family:'Space Mono',monospace;font-size:.55rem;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--faint);margin-bottom:.15rem;
+}
+.fpill .ft{font-size:.92rem;font-weight:600;letter-spacing:.04em}
+.fpill .fd{
+  font-size:.8rem;line-height:1.85;margin-top:0;color:#5A574F;
+  opacity:0;max-height:0;overflow:hidden;
+  transition:opacity .28s ease,max-height .28s ease,margin-top .28s ease;
+}
+.fpill.on .fd{opacity:1;max-height:9em;margin-top:.5rem}
+@media (max-width:900px){
+  #featrail{right:50%;transform:translateX(50%);top:60%;width:min(320px,86vw)}
+  .fpill{padding:.7rem 1rem}
+  .fpill .ft{font-size:.85rem}
+}
+#pod{
+  position:absolute;left:32%;top:50%;width:min(54vh,390px);
+  transform:translate(-50%,-50%);
+  perspective:900px;
+}
+#pod .turn{transform-style:preserve-3d;will-change:transform;position:relative}
+#pod svg{display:block;width:100%;height:auto}
+#pod .pimg{display:none;width:100%;height:auto}
+#pod.has-photo svg{display:none}
+#pod.has-photo .pimg{display:block}
+#pod .sheen{
+  position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.55) 50%,transparent 70%);
+  background-size:280% 100%;background-position:120% 0;
+  mix-blend-mode:soft-light;
+}
+#pod .pshadow{
+  position:absolute;left:12%;right:12%;bottom:-9%;height:7%;
+  background:radial-gradient(ellipse at 50% 50%,rgba(65,64,60,.22),transparent 70%);
+  filter:blur(6px);
+}
+#product .plabel{
+  position:absolute;left:32%;transform:translateX(-50%);text-align:center;
+  top:calc(50% + min(30vh,262px));white-space:nowrap;
+}
+@media (max-width:900px){
+  #pod{left:50%;top:30%;width:min(32vh,240px)}
+  #product .plabel{display:none}
+}
+#product .plabel .name{font-family:'Cormorant Garamond',serif;font-size:1rem;letter-spacing:.4em;text-indent:.4em;text-transform:uppercase}
+#product .plabel .line{font-family:'Shippori Mincho',serif;font-size:.86rem;letter-spacing:.2em;margin-top:.9em}
+#product .plabel .cw{margin-top:1.1em;display:flex;justify-content:center;gap:.7em}
+#product .plabel .cw i{width:9px;height:9px;border-radius:50%;border:1px solid var(--line);transition:transform .3s,border-color .3s}
+#product .plabel .cw i.on{transform:scale(1.35);border-color:var(--faint)}
+#product .pcap{position:absolute;top:clamp(1.6rem,4vh,3rem);left:0;right:0;text-align:center}
+
+/* ───────── CRAFT（横スクロール: 素材とこだわり） ───────── */
+#craft{position:relative}
+#craft .rail{height:100svh;position:relative;overflow:hidden;display:flex;align-items:center;background:linear-gradient(180deg,var(--milk),var(--sand) 130%)}
+#craft .shead{position:absolute;top:clamp(1.6rem,4vh,3rem);left:0;right:0;text-align:center}
+#craft .track{display:flex;align-items:stretch;gap:clamp(2.4rem,6vw,5rem);padding-inline:clamp(1.4rem,6vw,6rem);will-change:transform}
+.cpanel{flex:0 0 auto;width:min(74vw,480px);display:flex;flex-direction:column}
+.cpanel .cimg{position:relative;aspect-ratio:4/5;overflow:hidden;background:var(--mist)}
+.cpanel .cimg .img{position:absolute;inset:0;background-position:center;background-size:cover}
+.cpanel .cimg::after{content:"";position:absolute;inset:0;background-image:var(--grain);background-size:300px 300px;opacity:.4;mix-blend-mode:overlay}
+.cpanel .cn{margin-top:1.1rem;display:flex;justify-content:space-between;align-items:baseline}
+.cpanel .cn .rn{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--faint);font-size:.8rem}
+.cpanel h3{font-family:'Shippori Mincho',serif;font-weight:500;font-size:1rem;letter-spacing:.24em;margin-top:.5rem}
+.cpanel p{font-size:.84rem;margin-top:.6rem;max-width:24em}
+#c-img1{background-image:url("img/craft1.jpg")}
+#c-img2{background-image:url("img/craft2.jpg")}
+#c-img3{background-image:url("img/craft3.jpg")}
+#c-img4{background-image:url("img/product.jpg")}
+@media (max-width:760px){
+  #craft .rail{height:auto;display:block;padding:5rem 0 3rem}
+  #craft .shead{position:static;margin-bottom:2.5rem}
+  #craft .track{flex-direction:column;align-items:center;gap:3.5rem}
+  .cpanel{width:min(84vw,420px)}
+}
+
+/* ───────── PHILOSOPHY（手書きの理念） ───────── */
+#philosophy{padding:clamp(7rem,17vh,12rem) 0;text-align:center;position:relative}
+#philosophy::after{content:"";position:absolute;inset:0;background-image:var(--grain);background-size:300px 300px;opacity:.28;mix-blend-mode:overlay;pointer-events:none}
+#philosophy .cap{display:block;margin-bottom:3.2rem}
+#philosophy .hand{
+  font-family:'Klee One',cursive;font-weight:400;
+  font-size:clamp(1.02rem,2vw,1.32rem);line-height:3.0;letter-spacing:.14em;
+  transform:rotate(-.4deg);
+}
+#philosophy .hand .l{display:block}
+#philosophy .hand .strong{font-weight:600;font-size:1.14em}
+
+/* ───────── PLATES（写真集の版面） ───────── */
+.plates{padding:clamp(5rem,12vh,9rem) 0 0}
+.plate{position:relative;margin:0 auto clamp(6rem,14vh,10rem)}
+.plate .frame{position:relative;overflow:hidden}
+.plate .pcap{margin-top:1rem;display:flex;justify-content:space-between;gap:1rem}
+.plate .pcap .rn{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--faint);font-size:.8rem;letter-spacing:.1em}
+/* 版面の変奏: 右寄せ大 / 左寄せ小 / 全幅 */
+.plate.p1{max-width:1200px;padding-inline:clamp(1.4rem,5vw,4rem)}
+.plate.p1 .frame{margin-left:auto;width:min(72%,760px);aspect-ratio:4/5}
+.plate.p1 .pcap{margin-left:auto;width:min(72%,760px)}
+.plate.p1 .verse{position:absolute;left:clamp(1.4rem,5vw,4rem);top:14%;z-index:2}
+.plate.p2{max-width:1200px;padding-inline:clamp(1.4rem,5vw,4rem)}
+.plate.p2 .frame{width:min(46%,430px);aspect-ratio:3/4}
+.plate.p2 .pcap{width:min(46%,430px)}
+.plate.p2 .verse{position:absolute;right:clamp(1.4rem,5vw,4rem);bottom:18%;text-align:right;z-index:2}
+.plate.p3 .frame{width:100%;aspect-ratio:21/9}
+.plate.p3 .pcap{padding-inline:clamp(1.4rem,5vw,4rem)}
+.plate.p3 .verse{position:absolute;left:0;right:0;top:44%;text-align:center;z-index:2;color:var(--ink);text-shadow:0 0 22px rgba(255,255,255,.95),0 0 8px rgba(255,255,255,.8)}
+.plate .verse .jp{font-family:'Shippori Mincho',serif;font-size:clamp(1rem,1.9vw,1.35rem);letter-spacing:.34em;line-height:2.4}
+.plate .verse .jp.dark{color:var(--ink)}
+.plate .verse .en{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.8rem;letter-spacing:.14em;margin-top:.8em;color:var(--faint)}
+.plate.p3 .verse .en{color:var(--faint)}
+/* 図版の中身（仮図版・淡いグラデーション） */
+#img-mist{background:
+  url("img/street3.jpg") center/cover no-repeat,
+  radial-gradient(ellipse 70% 30% at 46% 52%,rgba(255,255,255,.9),transparent 74%),
+  linear-gradient(180deg,#E6ECEA 0%,#D3E0DE 40%,#AFC4C5 53.6%,#9FB6B9 54.2%,#BCCFCE 56%,#CFDBD8 72%,#E9ECE6 100%)}
+#img-dune{background:
+  url("img/plate2.jpg") center/cover no-repeat,
+  radial-gradient(ellipse 90% 42% at 30% 88%,rgba(214,200,170,.55),transparent 70%),
+  radial-gradient(ellipse 60% 26% at 72% 46%,rgba(255,255,255,.75),transparent 72%),
+  linear-gradient(180deg,#F1EEE6 0%,#E8E0CE 58%,#D9CDB4 100%)}
+#img-water{background:
+  url("img/street4.jpg") center/cover no-repeat,
+  repeating-linear-gradient(174deg,rgba(255,255,255,.28) 0 2px,transparent 2px 26px),
+  radial-gradient(ellipse 70% 40% at 60% 30%,rgba(255,255,255,.6),transparent 68%),
+  linear-gradient(180deg,#D7E4E4 0%,#BFD4D5 46%,#A9C3C6 100%)}
+
+/* ───────── ガラスの宣言 ───────── */
+#glass{position:relative;height:74svh;min-height:480px;display:flex;align-items:center;justify-content:center}
+#glass .img{background:
+  url("img/glass.jpg") center/cover no-repeat,
+  radial-gradient(ellipse 56% 30% at 50% 40%,rgba(255,255,255,.8),transparent 70%),
+  linear-gradient(180deg,#DCE6E5 0%,#C8D9D8 48%,#D9E2DE 100%)}
+#glass .pane{
+  position:relative;z-index:2;text-align:center;
+  padding:clamp(2.4rem,6vw,4rem) clamp(2rem,7vw,5.5rem);
+  background:rgba(250,251,249,.42);
+  backdrop-filter:blur(14px) saturate(1.05);
+  -webkit-backdrop-filter:blur(14px) saturate(1.05);
+  border:1px solid rgba(255,255,255,.65);
+}
+#glass .pane .jp{font-family:'Shippori Mincho',serif;font-size:clamp(1.05rem,2vw,1.4rem);letter-spacing:.4em;line-height:2.5}
+#glass .pane .en{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.82rem;color:var(--faint);margin-top:1.2em;letter-spacing:.16em}
+
+/* ───────── 記（クレジット・案内） ───────── */
+#credits{padding:clamp(6rem,14vh,10rem) 0 clamp(3rem,7vh,5rem)}
+#credits .grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(2.5rem,7vw,6rem);align-items:start}
+#credits .note p{max-width:30em}
+#credits .note .cap{display:block;margin-bottom:2rem}
+#credits form{margin-top:0}
+#credits form .cap{display:block;margin-bottom:2rem}
+#credits .fieldrow{display:flex;align-items:baseline;gap:1.2rem;border-bottom:1px solid var(--ink);padding-bottom:.55em;max-width:26em}
+#credits input[type=email]{
+  flex:1;border:none;background:transparent;font:inherit;color:var(--ink);
+  letter-spacing:.06em;outline:none;
+}
+#credits input::placeholder{color:var(--faint)}
+#credits button{
+  border:none;background:transparent;cursor:pointer;font:inherit;
+  font-size:.7rem;letter-spacing:.28em;text-transform:uppercase;color:var(--ink);
+  transition:opacity .3s;padding:0;
+}
+#credits button:hover{opacity:.55}
+#credits .formmsg{margin-top:1.2rem;font-size:.8rem;display:none;color:var(--faint)}
+#credits .fine{margin-top:1.2rem;font-size:.72rem;color:var(--faint)}
+footer{border-top:1px solid var(--line);padding:2.2rem 0 2.6rem}
+footer .row{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:1rem}
+footer .wm{font-family:'Cormorant Garamond',serif;letter-spacing:.5em;text-indent:.5em;font-size:.95rem}
+footer a{font-size:.72rem;letter-spacing:.2em;color:var(--faint);text-decoration:none;border-bottom:1px solid var(--line);padding-bottom:.2em}
+footer a:hover{color:var(--ink);border-color:var(--ink)}
+
+/* 出現: ゆっくり浮かぶ（上品・opacityとtransformのみ） */
+.rise{opacity:0;transform:translateY(28px)}
+@media (prefers-reduced-motion:reduce){
+  .rise{opacity:1 !important;transform:none !important}
+  #pod .turn{transform:none !important}
+}
+@media (max-width:760px){
+  .plate.p1 .frame,.plate.p1 .pcap{width:100%}
+  .plate.p2 .frame,.plate.p2 .pcap{width:72%}
+  .plate.p2 .verse{position:static;text-align:left;margin-top:1.6rem}
+  .plate.p1 .verse{position:static;margin-bottom:1.4rem}
+  #credits .grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ═════════ 表紙: ノイズの乗った淡い海霧 ═════════ -->
+<section id="hero" aria-label="表紙">
+  <div class="ph">
+    <div class="img" data-para="4"></div>
+    <div class="slide s1 on"></div>
+    <div class="slide s2"></div>
+    <div class="slide s3"></div>
+  </div>
+  <div class="mast">
+    <span class="wordmark">YOKAI</span>
+    <span class="vol">LOOKBOOK VOL.0 — EMBRACE SWEAT</span>
+  </div>
+  <div class="foot">
+    <p class="jp">濡れることは、気持ちいい。</p>
+    <p class="en">getting wet feels good</p>
+  </div>
+  <div class="cue">scroll</div>
+</section>
+
+<!-- ═════════ プロダクト: スクロールで回る一足 ═════════ -->
+<section id="product" aria-label="ファーストプロダクト">
+  <div class="stage">
+    <p class="pcap cap">first product — study（AI生成サンプル）</p>
+    <div id="featrail" aria-label="プロダクト仕様（検討中の覚書）"></div>
+    <div id="pod">
+      <div class="turn" id="turn">
+        <svg viewBox="0 0 240 300" aria-label="ウールソックスの試作イメージ（仮素材）">
+          <defs>
+            <linearGradient id="knit" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#EDEFEA"/>
+              <stop offset=".55" stop-color="#D9E2DE"/>
+              <stop offset="1" stop-color="#C2D2CF"/>
+            </linearGradient>
+            <pattern id="rib" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(12)">
+              <rect width="7" height="7" fill="transparent"/>
+              <path d="M0 3.5 H7" stroke="rgba(255,255,255,.5)" stroke-width="1.1"/>
+              <path d="M3.5 0 V7" stroke="rgba(120,140,135,.16)" stroke-width="1"/>
+            </pattern>
+            <linearGradient id="cuff" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#F4F4EF"/>
+              <stop offset="1" stop-color="#DFE6E1"/>
+            </linearGradient>
+          </defs>
+          <g id="colorway">
+            <path d="M84 18 h74 c4 0 7 3 7 7 v118 c0 26 12 34 26 44 c16 11 22 27 14 47 c-8 21 -32 32 -55 24 c-10-3-17-8-24-15 l-40-38 c-10-10-16-22-16-38 V25 c0-4 3-7 7-7 z" fill="url(#knit)"/>
+            <path d="M84 18 h74 c4 0 7 3 7 7 v118 c0 26 12 34 26 44 c16 11 22 27 14 47 c-8 21 -32 32 -55 24 c-10-3-17-8-24-15 l-40-38 c-10-10-16-22-16-38 V25 c0-4 3-7 7-7 z" fill="url(#rib)"/>
+            <path d="M84 18 h74 c4 0 7 3 7 7 v26 h-88 V25 c0-4 3-7 7-7 z" fill="url(#cuff)"/>
+            <path d="M77 51 h88" stroke="rgba(120,140,135,.35)" stroke-width="1.2"/>
+            <path d="M150 210 c14 10 20 24 14 40" stroke="rgba(255,255,255,.6)" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+            <circle cx="121" cy="120" r="4.2" fill="rgba(255,255,255,.75)"/>
+            <path d="M121 124 c0 6 4 8 4 12 a4 4 0 1 1 -8 0 c0-4 4-6 4-12 z" fill="rgba(165,190,186,.8)"/>
+          </g>
+        </svg>
+        <img class="pimg" id="pimg" src="img/product.jpg" alt="ウールソックスの試作イメージ（仮素材）">
+        <div class="sheen" id="sheen"></div>
+      </div>
+      <div class="pshadow" id="pshadow"></div>
+    </div>
+    <div class="plabel">
+      <p class="name">first socks</p>
+      <p class="line">ウール——濡れても、ぬくもりを手放さない。</p>
+      <div class="cw" aria-label="カラー展開（仮）">
+        <i class="on"></i><i></i><i></i>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ 素材とこだわり: 横スクロール ═════════ -->
+<section id="craft" aria-label="素材とこだわり">
+  <div class="rail">
+    <p class="shead cap">craft — こだわりの覚書（開発中）</p>
+    <div class="track" id="ctrack">
+      <div class="cpanel">
+        <div class="cimg"><div class="img" id="c-img1"></div></div>
+        <div class="cn"><span class="rn">i — material</span><span class="cap">AI生成サンプル</span></div>
+        <h3>メリノウール</h3>
+        <p>濡れても、ぬくもりを手放さない繊維。湿気を吸っては、ゆっくり返す。</p>
+      </div>
+      <div class="cpanel">
+        <div class="cimg"><div class="img" id="c-img2"></div></div>
+        <div class="cn"><span class="rn">ii — knit</span><span class="cap">AI生成サンプル</span></div>
+        <h3>リブ編み</h3>
+        <p>厚みと弾みはリブで。ぐっしょりの日も、履き心地が沈まないように。</p>
+      </div>
+      <div class="cpanel">
+        <div class="cimg"><div class="img" id="c-img3"></div></div>
+        <div class="cn"><span class="rn">iii — function</span><span class="cap">AI生成サンプル</span></div>
+        <h3>「乾く」を、待たない</h3>
+        <p>濡れている時間ごと、気持ちよくする。それだけを、まんなかに。</p>
+      </div>
+      <div class="cpanel">
+        <div class="cimg"><div class="img" id="c-img4"></div></div>
+        <div class="cn"><span class="rn">iv — first socks</span><span class="cap">準備中</span></div>
+        <h3>妖怪族の会員証</h3>
+        <p>最初の一足は、これから。仕様は、仲間の声とともに決めていきます。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ 理念: 手書きの8行 ═════════ -->
+<section id="philosophy" aria-label="理念">
+  <span class="cap">body copy — 理念</span>
+  <p class="hand">
+    <span class="l rise">汗を、恥と呼ぶのをやめる。</span>
+    <span class="l rise">濡れることは、気持ちいい——</span>
+    <span class="l rise">プールから上がった、あの解放をおぼえている。</span>
+    <span class="l rise">手のひらの水も、おなじ水だ。</span>
+    <span class="l rise">隠すためにつかってきた時間を、</span>
+    <span class="l rise">称えるために、つかいなおす。</span>
+    <span class="l rise strong">私たち、妖怪。</span>
+    <span class="l rise strong">汗かいて行こうぜ。</span>
+  </p>
+</section>
+
+<!-- ═════════ 図版: 写真集の版面 ═════════ -->
+<div class="plates">
+
+  <article class="plate p1">
+    <div class="verse rise">
+      <p class="jp dark">隠していた手を、<br>光のなかへ。</p>
+      <p class="en">into the light</p>
+    </div>
+    <div class="frame rise"><div class="ph"><div class="img" id="img-mist" data-para="7"></div></div></div>
+    <div class="pcap"><span class="rn">plate I — red earth</span><span class="cap">AI生成サンプル・撮影素材差し替え前提</span></div>
+  </article>
+
+  <article class="plate p2">
+    <div class="frame rise"><div class="ph"><div class="img" id="img-dune" data-para="7"></div></div></div>
+    <div class="pcap"><span class="rn">plate II — brick</span><span class="cap">AI生成サンプル</span></div>
+    <div class="verse rise">
+      <p class="jp dark">汗も、おなじ水。</p>
+      <p class="en">sweat is the same water</p>
+    </div>
+  </article>
+
+  <article class="plate p3">
+    <div class="frame"><div class="ph"><div class="img" id="img-water" data-para="9"></div></div></div>
+    <div class="verse rise">
+      <p class="jp">濡れて、ひらく。</p>
+      <p class="en">soaked, and open</p>
+    </div>
+    <div class="pcap"><span class="rn">plate III — old town</span><span class="cap">AI生成サンプル</span></div>
+  </article>
+
+</div>
+
+<!-- ═════════ ガラスの宣言 ═════════ -->
+<section id="glass" aria-label="宣言">
+  <div class="ph"><div class="img" data-para="5"></div></div>
+  <div class="pane rise">
+    <p class="jp">私たち、妖怪。<br>汗を、称えるものへ。</p>
+    <p class="en">embrace sweat</p>
+  </div>
+</section>
+
+<!-- ═════════ 記 ═════════ -->
+<section id="credits">
+  <div class="wrap">
+    <div class="grid">
+      <div class="note rise">
+        <span class="cap">note</span>
+        <p>YOKAIは、手掌多汗症レベル10の当事者がつくる、汗を称えるブランド。ウールの靴下から始めます。多汗症とともに生きる人は、世界に3.65〜3.85億人（推計）——あなたひとりの体質ではありません。</p>
+      </div>
+      <form id="regform" class="rise">
+        <span class="cap">first socks — 先行案内</span>
+        <div class="fieldrow">
+          <input type="email" required placeholder="you@example.com" aria-label="メールアドレス">
+          <button type="submit">register</button>
+        </div>
+        <p class="formmsg" id="formmsg">ありがとうございます。（プロトタイプのため送信先は未接続です）</p>
+        <p class="fine">登録はいつでも解除できます。データを売ることはありません。</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="row">
+      <span class="wm">YOKAI</span>
+      <a href="#">X — 手汗くん</a>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ── 滑り感: Lenis×ScrollTrigger（台帳の統合4行） ── */
+if(!reduced && window.Lenis){
+  const lenis = new Lenis({ lerp: 0.09 });
+  lenis.on('scroll', ScrollTrigger.update);
+  gsap.ticker.add(t => lenis.raf(t * 1000));
+  gsap.ticker.lagSmoothing(0);
+}
+
+/* ── プロダクト: pin+scrub の回転系挙動（ページ唯一のpin） ──
+   3Dモデルの代わりに、平面をrotateYで振り+sheen掃引+カラー3段。 */
+/* 写真が用意できていれば SVG 仮図版と差し替える（無ければ SVG のまま） */
+(function(){
+  const img = document.getElementById('pimg'), pod = document.getElementById('pod');
+  img.addEventListener('load', ()=> pod.classList.add('has-photo'));
+  img.addEventListener('error', ()=> img.remove());
+  if(img.complete && img.naturalWidth) pod.classList.add('has-photo');
+})();
+
+const cwDots = document.querySelectorAll('#product .cw i');
+const colorways = [
+  {a:'#EDEFEA', b:'#D9E2DE', c:'#C2D2CF'},   /* glass  */
+  {a:'#F2EFE8', b:'#E7DFD0', c:'#D6C9B3'},   /* sand   */
+  {a:'#EFECEF', b:'#DFDAE3', c:'#C9C4D4'}    /* lilac  */
+];
+/* 機能レール: 回転ダイヤル駆動（proxy+snap・台帳#10）× 中央強調の縦レール（台帳#11のrender差し替え）
+   内容はすべて検討中/構想の覚書——確定仕様ではない */
+const FEATS = [
+  {k:'yk-001',       t:'FIRST SOCKS',            d:'ウールの一足、試作スタディ。妖怪族の会員証になる。'},
+  {k:'material',     t:'メリノウール',            d:'混率は検討中。濡れても、ぬくもりを手放さない素材から始める。'},
+  {k:'knit',         t:'2×2リブ編み',            d:'肌に当たる面をなめらかに。つま先フラット縫製を試作で検証中。'},
+  {k:'comfort',      t:'ぐっしょりでも、気持ちいい', d:'吸放湿で蒸れを逃がす設計を検証中。汗をかくことを前提にした一足。'},
+  {k:'care',         t:'ケア',                   d:'洗濯仕様は検討中。日常で気兼ねなく履けることを優先する。'},
+  {k:'sweat signal', t:'SWEAT SIGNAL',           d:'発汗を記録し、読む。将来のバイタル計測へ拡張していくβ構想。'},
+];
+const rail = document.getElementById('featrail');
+FEATS.forEach(f=>{
+  const el = document.createElement('div');
+  el.className = 'fpill';
+  el.innerHTML = '<span class="fk">'+f.k+'</span><span class="ft">'+f.t+'</span><p class="fd">'+f.d+'</p>';
+  rail.appendChild(el);
+});
+const pills = [...rail.children];
+const STEP = 74, EX = 66;   /* ピル間隔と、展開ぶんの押し下げ量(px) */
+function renderRail(p){
+  const act = pills.map((_,j)=> Math.max(0, 1 - Math.abs(j - p)));
+  let sBelow = 0, sBefore = [];
+  for(let j=0;j<pills.length;j++){ sBefore[j] = sBelow; sBelow += act[j]; }
+  const sCenter = sBefore[Math.round(Math.min(pills.length-1, Math.max(0,p)))] || 0;
+  pills.forEach((el,j)=>{
+    const y = (j - p) * STEP + EX * (sBefore[j] - sCenter);
+    const s = .84 + act[j] * .22;
+    el.style.transform = 'translateY('+(y - 58)+'px) scale('+s+')';
+    el.style.opacity = .38 + act[j] * .62;
+    el.style.zIndex = Math.round(10 + act[j]*10);
+    el.classList.toggle('on', act[j] > .6);
+  });
+}
+
+const photoFilters = [
+  'none',
+  'sepia(.22) saturate(1.06) brightness(1.01)',                    /* sand */
+  'sepia(.12) hue-rotate(215deg) saturate(.5) brightness(1.02)'    /* lilac */
+];
+function setColorway(i){
+  const stops = document.querySelectorAll('#knit stop');
+  const cw = colorways[i];
+  stops[0].setAttribute('stop-color', cw.a);
+  stops[1].setAttribute('stop-color', cw.b);
+  stops[2].setAttribute('stop-color', cw.c);
+  const pimg = document.getElementById('pimg');
+  if(pimg) pimg.style.filter = photoFilters[i];
+  cwDots.forEach((d,k)=>d.classList.toggle('on', k===i));
+}
+if(!reduced){
+  const turn = { ry:-26, rz:-5, s:.82, cw:0 };
+  gsap.timeline({
+    scrollTrigger:{ trigger:'#product', start:'top top', end:'+=340%', pin:'.stage', scrub:1,
+      snap:{ snapTo:1/(FEATS.length-1), duration:{min:.15,max:.4}, ease:'power2.out' },
+      onUpdate(self){ const i = Math.min(2, Math.floor(self.progress*3)); setColorway(i);
+        renderRail(self.progress*(FEATS.length-1)); } },
+    defaults:{ ease:'none' }
+  })
+  .fromTo('#turn', { rotateY:-26, rotate:-5, scale:.82 }, { rotateY:26, rotate:5, scale:1, duration:1 })
+  .fromTo('#sheen', { backgroundPosition:'130% 0' }, { backgroundPosition:'-30% 0', duration:1 }, 0)
+  .fromTo('#pshadow', { scaleX:.7, opacity:.5 }, { scaleX:1.05, opacity:.9, duration:1 }, 0);
+}else{
+  setColorway(0);
+}
+renderRail(0);
+addEventListener('resize', ()=>{ if(reduced) renderRail(0); });
+
+/* ── 表紙: 3枚の入れ替え表示（ゆっくりクロスフェード） ── */
+if(!reduced){
+  const slides = document.querySelectorAll('#hero .slide');
+  let cur = 0;
+  setInterval(()=>{
+    slides[cur].classList.remove('on');
+    cur = (cur+1) % slides.length;
+    slides[cur].classList.add('on');
+  }, 6500);
+}
+
+/* ── 横スクロール: 素材とこだわり（pin 2/2・snap付き 台帳6） ── */
+if(!reduced && innerWidth > 760){
+  const track = document.getElementById('ctrack');
+  const n = track.children.length;
+  gsap.to(track, {
+    x: () => -(track.scrollWidth - innerWidth + 40), ease:'none',
+    scrollTrigger:{
+      trigger:'#craft', start:'top top',
+      end: () => '+=' + (track.scrollWidth - innerWidth),
+      pin:'#craft .rail', scrub:1,
+      snap:{ snapTo:1/(n-1), duration:{min:.2,max:.6}, ease:'power2.inOut' },
+      invalidateOnRefresh:true
+    }
+  });
+}
+
+/* ── パララックス: 枠より大きい図版を逆方向へ（±data-para %） ── */
+if(!reduced){
+  document.querySelectorAll('[data-para]').forEach(img=>{
+    const amp = +img.dataset.para || 6;
+    gsap.fromTo(img, { yPercent: amp }, { yPercent: -amp, ease:'none',
+      scrollTrigger:{ trigger: img.closest('.ph').parentElement, start:'top bottom', end:'bottom top', scrub:true } });
+  });
+}
+
+/* ── 出現: ゆっくり浮かぶ（1.1s・28px・opacity/transformのみ） ── */
+if(!reduced){
+  gsap.utils.toArray('.rise').forEach(el=>{
+    gsap.to(el, { opacity:1, y:0, duration:1.1, ease:'power2.out',
+      scrollTrigger:{ trigger:el, start:'top 88%' } });
+  });
+}
+
+document.getElementById('regform').addEventListener('submit', e=>{
+  e.preventDefault();
+  document.getElementById('formmsg').style.display='block';
+});
+</script>
+</body>
+</html>

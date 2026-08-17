@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>株式会社一陽 — 外壁・屋根塗装（実験リデザイン）</title>
+<!-- =====================================================================
+  ichiyo.html — ichi-yo.com トップの内容を新デザインで実装（2026-08-16 裁定A「色見本帳」）
+  編成: E型（型の語彙で押す）＋一点のアクセント／素材: 色面＋タイポ主導（写真は実績のみ）
+  主役機構: 「塗り」のセクション転換（clip-pathの斜めエッジをscrubで進める・pinなし通過型）
+  脇役: ペイントチップ短冊・カウントアップ・出現stagger・実績のずらし配置＋パララックス
+  逸脱: 一点のアクセント（陽橙はCTAのみ）／級数の落差（7,856だけ巨大）
+  前回(toei2)との差分宣言: D紙芝居→E型／写真主導→色面タイポ主導／横スクロール→塗り転換
+===================================================================== -->
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<style>
+  :root{
+    --paper:#f8f6f1;   /* 白壁 */
+    --ink:#2a2c2e;     /* 炭 */
+    --acc:#e0731f;     /* 陽橙 — CTAのみの一点 */
+    --line:#e3dfd4;
+    --c1:#8f9aa6; --c2:#b9a88f; --c3:#8a9b84;   /* 外壁塗料の中彩度パレット */
+    --c4:#3f5570; --c5:#b07d5e; --c6:#d9d3c6;
+    --deep:#32373d;    /* 数字帯の濃地 */
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{overflow-x:clip}
+  body{background:var(--paper);color:var(--ink);
+    font-family:"Hiragino Kaku Gothic ProN","Hiragino Sans",sans-serif;
+    line-height:1.9;letter-spacing:.04em;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  .frame{width:min(94%,1240px);margin-inline:auto}
+  .read{max-width:36em}
+  .sec-head{display:flex;align-items:baseline;gap:24px;margin-bottom:52px}
+  .sec-head h2{font-size:clamp(24px,3vw,38px);font-weight:700;letter-spacing:.12em}
+  .sec-head .en{font-size:11px;letter-spacing:.34em;color:#8d887c}
+  .line{display:block;overflow:hidden}
+  .line em{display:inline-block;font-style:normal;will-change:transform}
+
+  /* ---------- ローダー: 色帯が壁を塗って通り過ぎる ---------- */
+  #loader{position:fixed;inset:0;z-index:60;background:var(--paper);
+    display:flex;align-items:center;justify-content:center}
+  #loader .stripes{position:absolute;inset:0;display:flex;flex-direction:column}
+  #loader .stripes i{flex:1;transform:translateX(-101%)}
+  #loader .stripes i:nth-child(1){background:var(--c1)}
+  #loader .stripes i:nth-child(2){background:var(--c3)}
+  #loader .stripes i:nth-child(3){background:var(--c2)}
+  #loader .mark{position:relative;z-index:2;font-size:15px;letter-spacing:.5em;font-weight:700;opacity:0}
+
+  /* ---------- ヘッダー ---------- */
+  header{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;
+    justify-content:space-between;padding:18px min(4%,40px);mix-blend-mode:normal}
+  header .logo{font-size:15px;font-weight:700;letter-spacing:.32em}
+  header .tel{font-size:13px;letter-spacing:.08em;text-align:right;line-height:1.5;
+    background:rgba(248,246,241,.85);padding:8px 16px;border-radius:12px;backdrop-filter:blur(4px)}
+  header .tel b{font-size:17px;letter-spacing:.04em}
+  header .tel small{display:block;font-size:10px;color:#8d887c;letter-spacing:.14em}
+  @media(max-width:540px){header .tel small{display:none}header .tel b{font-size:15px}}
+
+  /* ---------- ヒーロー ---------- */
+  #hero{min-height:100svh;position:relative;display:flex;flex-direction:column;justify-content:center;
+    overflow:hidden;padding:120px 0 40px}
+  /* 白壁の質感（ごく薄いローラー目） */
+  #hero::before{content:"";position:absolute;inset:0;
+    background:repeating-linear-gradient(90deg,rgba(42,44,46,.016) 0 2px,transparent 2px 9px)}
+  /* 背景の大きな色面（塗りかけの壁・刷毛エッジ） */
+  #hero .field{position:absolute;top:0;right:0;width:44vw;height:100%;background:var(--c3);
+    clip-path:polygon(18% 0,100% 0,100% 100%,6% 100%);opacity:.94}
+  #hero .field::after{content:"";position:absolute;inset:0;
+    background:repeating-linear-gradient(90deg,rgba(255,255,255,.05) 0 2px,transparent 2px 8px)}
+  #hero .field2{position:absolute;bottom:-6%;right:26vw;width:20vw;height:52%;background:var(--c2);
+    clip-path:polygon(0 12%,88% 0,100% 100%,0 100%);opacity:.85}
+  #hero .inner{position:relative;z-index:2}
+  #hero .eyebrow{font-size:12px;letter-spacing:.34em;color:#8d887c;margin-bottom:26px}
+  #hero h1{font-size:clamp(29px,6.4vw,92px);font-weight:700;line-height:1.5;letter-spacing:.1em}
+  #hero .sub{margin-top:30px;font-size:15px;color:#5c5f61;max-width:34em}
+  #hero .cta-row{margin-top:44px;display:flex;gap:18px;flex-wrap:wrap;align-items:center}
+  .btn{display:inline-block;background:var(--acc);color:#fff;font-weight:700;
+    font-size:14px;letter-spacing:.18em;padding:18px 46px;border-radius:999px;
+    box-shadow:0 12px 30px rgba(224,115,31,.32)}
+  .btn-ghost{display:inline-block;font-size:13px;letter-spacing:.14em;font-weight:600;
+    padding:16px 34px;border-radius:999px;border:1.5px solid var(--ink)}
+  /* ヒーロー下部のチップ列 */
+  #hero .chips{position:relative;z-index:2;margin-top:70px;display:flex;gap:10px;flex-wrap:wrap}
+  #hero .chips i{width:58px;height:84px;border-radius:7px 7px 9px 9px;display:block;
+    box-shadow:0 6px 16px rgba(42,44,46,.14);position:relative}
+  #hero .chips i::after{content:"";position:absolute;left:0;right:0;bottom:0;height:22px;
+    background:#fff;border-radius:0 0 7px 7px}
+  #scroll-cue{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);
+    font-size:10px;letter-spacing:.3em;color:#8d887c;z-index:2}
+
+  /* ---------- 塗り転換（主役機構・共通） ---------- */
+  .paint-sec{position:relative}
+  .paint{position:absolute;inset:0;background:var(--pc);pointer-events:none;
+    clip-path:polygon(0 0,calc(var(--x) + 5%) 0,var(--x) 100%,0 100%)}
+  .paint::after{content:"";position:absolute;inset:0;
+    background:repeating-linear-gradient(90deg,rgba(255,255,255,.05) 0 2px,transparent 2px 8px)}
+  .paint-sec > .frame{position:relative;z-index:2}
+
+  /* ---------- 選ばれる理由（ペイントチップ短冊） ---------- */
+  #reasons{--pc:#ece7db;padding:150px 0 160px}
+  #reasons .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  @media(max-width:900px){#reasons .grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:540px){#reasons .grid{grid-template-columns:1fr}}
+  .chip-card{background:#fff;border-radius:10px;overflow:hidden;
+    box-shadow:0 10px 26px rgba(42,44,46,.08);transition:transform .3s ease,box-shadow .3s ease}
+  .chip-card:hover{transform:translateY(-8px);box-shadow:0 20px 40px rgba(42,44,46,.14)}
+  .chip-card .swatch{height:132px;background:var(--c);position:relative}
+  .chip-card .swatch::after{content:"";position:absolute;inset:0;
+    background:repeating-linear-gradient(90deg,rgba(255,255,255,.06) 0 2px,transparent 2px 8px)}
+  .chip-card .swatch b{position:absolute;left:14px;bottom:10px;color:#fff;
+    font-size:10px;letter-spacing:.26em;font-weight:600;opacity:.92}
+  .chip-card .body{padding:20px 18px 24px}
+  .chip-card h3{font-size:15px;font-weight:700;letter-spacing:.08em;line-height:1.6;margin-bottom:8px}
+  .chip-card p{font-size:12.5px;color:#6a6d6f}
+
+  /* ---------- 数字帯（濃地・級数の落差） ---------- */
+  #facts{--pc:var(--deep);padding:150px 0;color:#f2efe8}
+  #facts .big{text-align:center}
+  #facts .big .num{font-size:clamp(80px,14vw,210px);font-weight:700;line-height:1;
+    letter-spacing:.02em;font-variant-numeric:tabular-nums}
+  #facts .big .num small{font-size:.22em;letter-spacing:.2em;margin-left:10px}
+  #facts .big .lab{font-size:12px;letter-spacing:.4em;margin-top:16px;opacity:.75}
+  #facts .row{display:flex;justify-content:center;gap:70px;margin-top:70px;flex-wrap:wrap;text-align:center}
+  #facts .row .num{font-size:clamp(30px,4vw,52px);font-weight:700}
+  #facts .row .num small{font-size:.4em;margin-left:4px}
+  #facts .row .lab{font-size:11px;letter-spacing:.3em;margin-top:8px;opacity:.7}
+
+  /* ---------- 4つの安心（罫の2×2） ---------- */
+  #trust{padding:150px 0}
+  #trust .grid{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--line);border-left:1px solid var(--line)}
+  #trust .cell{padding:46px 40px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+  #trust .cell .n{font-size:clamp(40px,4.6vw,64px);font-weight:700;line-height:1;color:#d4cfc2}
+  #trust .cell h3{font-size:17px;font-weight:700;letter-spacing:.1em;margin:16px 0 8px}
+  #trust .cell p{font-size:13px;color:#6a6d6f}
+  @media(max-width:700px){#trust .grid{grid-template-columns:1fr}}
+
+  /* ---------- 施工実績（ずらし配置＋チップ添え） ---------- */
+  #works{padding:150px 0;background:#f1eee6}
+  #works .grid{display:grid;grid-template-columns:1fr 1fr;gap:64px 5%}
+  .work{display:block}
+  .work:nth-child(even){transform:translateY(64px)}
+  .work .ph{aspect-ratio:3/2;border-radius:12px;overflow:hidden;position:relative;
+    box-shadow:0 16px 36px rgba(42,44,46,.12)}
+  .work .ph .img{position:absolute;inset:-8% 0;background:center/cover no-repeat;will-change:transform}
+  .work .meta{display:flex;align-items:center;gap:12px;margin-top:16px}
+  .work .meta i{width:26px;height:36px;border-radius:4px;flex:0 0 auto;background:var(--c)}
+  .work .meta .t{font-size:13px;font-weight:700;letter-spacing:.08em}
+  .work .meta .c{font-size:10.5px;color:#8d887c;letter-spacing:.14em;display:block}
+  #works .grid-tail{height:64px}
+  @media(max-width:700px){#works .grid{grid-template-columns:1fr;gap:44px}
+    .work:nth-child(even){transform:none}#works .grid-tail{display:none}}
+
+  /* ---------- お客様の声（色罫の引用） ---------- */
+  #voice{padding:150px 0}
+  #voice .grid{display:grid;grid-template-columns:1fr 1fr;gap:44px 56px}
+  .vq{border-left:4px solid var(--c);padding-left:26px}
+  .vq p{font-size:15px;line-height:2.1;font-weight:600}
+  .vq .who{margin-top:12px;font-size:11.5px;color:#8d887c;letter-spacing:.2em}
+  @media(max-width:700px){#voice .grid{grid-template-columns:1fr}}
+
+  /* ---------- FAQ ---------- */
+  #faq{padding:150px 0;background:#f1eee6}
+  #faq details{border-bottom:1px solid #ddd8ca}
+  #faq summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;
+    padding:25px 6px;font-size:15px;font-weight:700;letter-spacing:.05em}
+  #faq summary::-webkit-details-marker{display:none}
+  #faq summary .ic{width:26px;height:26px;flex:0 0 auto;position:relative;margin-left:20px}
+  #faq summary .ic::before,#faq summary .ic::after{content:"";position:absolute;inset:50% auto auto 50%;
+    width:14px;height:1.5px;background:var(--ink);transform:translate(-50%,-50%)}
+  #faq summary .ic::after{transform:translate(-50%,-50%) rotate(90deg);transition:transform .3s ease}
+  #faq details[open] summary .ic::after{transform:translate(-50%,-50%) rotate(0)}
+  #faq .a{font-size:14px;color:#5c5f61;padding:0 6px}
+  #faq .a p{padding-bottom:25px;max-width:44em}
+
+  /* ---------- 施工エリア（市名のチップ） ---------- */
+  #area{padding:150px 0}
+  #area .tags{display:flex;flex-wrap:wrap;gap:12px}
+  #area .tags span{font-size:13px;letter-spacing:.1em;font-weight:600;
+    padding:10px 22px;border-radius:999px;background:#fff;border:1px solid var(--line)}
+  #area .tags span.main{background:var(--ink);color:#f8f6f1;border-color:var(--ink)}
+  #area .note{margin-top:22px;font-size:13px;color:#8d887c}
+
+  /* ---------- CTA（一点の陽橙） ---------- */
+  #cta{--pc:var(--c4);padding:160px 0;color:#f2efe8;text-align:center}
+  #cta h2{font-size:clamp(24px,3.8vw,48px);font-weight:700;letter-spacing:.12em;margin-bottom:14px}
+  #cta p{font-size:14px;opacity:.85;margin-bottom:40px}
+  #cta .tel-big{font-size:clamp(30px,5vw,58px);font-weight:700;letter-spacing:.04em;color:#fff}
+  #cta .hours{font-size:12px;letter-spacing:.24em;opacity:.8;margin:10px 0 36px}
+
+  footer{padding:60px 0 44px;border-top:1px solid var(--line)}
+  footer .offices{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:26px;
+    font-size:12.5px;color:#6a6d6f}
+  footer .offices b{display:block;font-size:12px;letter-spacing:.2em;color:var(--ink);margin-bottom:6px}
+  footer .cp{margin-top:40px;text-align:center;font-size:10.5px;letter-spacing:.3em;color:#8d887c}
+
+  @media (prefers-reduced-motion: reduce){
+    .line em{transform:none!important}
+    #loader{display:none}
+    .paint{clip-path:none!important}
+  }
+
+  /* ---------- flatモード（スクショ検証用） ---------- */
+  .flat #loader{display:none}
+  .flat #hero{min-height:820px}
+  .flat .paint{clip-path:none!important}
+  .flat .line em{transform:none!important}
+</style>
+</head>
+<body>
+
+<div id="loader" aria-hidden="true">
+  <div class="stripes"><i></i><i></i><i></i></div>
+  <div class="mark">株式会社一陽</div>
+</div>
+
+<header>
+  <div class="logo">一陽</div>
+  <div class="tel"><small>お見積り・ご相談 無料／9:00–18:00 年中無休</small><b>0120-407-616</b></div>
+</header>
+
+<!-- ヒーロー -->
+<section id="hero">
+  <div class="field"></div><div class="field2"></div>
+  <div class="frame inner">
+    <div class="eyebrow">外壁塗装・屋根塗装・防水工事 — 千葉県八千代市</div>
+    <h1>
+      <span class="line"><em>その家は、</em></span>
+      <span class="line"><em>家族の宝物だから。</em></span>
+    </h1>
+    <p class="sub">プロの目で無料診断し、世界に一つだけのお見積り書をつくります。塗装のことは、地域で7,856件を塗ってきた一陽にご相談ください。</p>
+    <div class="cta-row">
+      <a class="btn" href="#cta">無料お見積り・ご相談</a>
+      <a class="btn-ghost" href="#works">施工実績を見る</a>
+    </div>
+    <div class="chips" aria-hidden="true">
+      <i style="background:var(--c1)"></i><i style="background:var(--c2)"></i><i style="background:var(--c3)"></i>
+      <i style="background:var(--c4)"></i><i style="background:var(--c5)"></i><i style="background:var(--c6)"></i>
+    </div>
+  </div>
+  <div id="scroll-cue">SCROLL</div>
+</section>
+
+<!-- 選ばれる6つの理由（塗り転換1・ペイントチップ短冊） -->
+<section id="reasons" class="paint-sec">
+  <div class="paint"></div>
+  <div class="frame">
+    <div class="sec-head"><h2>一陽が選ばれる6つの理由</h2><span class="en">REASONS</span></div>
+    <div class="grid">
+      <div class="chip-card"><div class="swatch" style="--c:var(--c1)"><b>No.01</b></div><div class="body"><h3>宝物の家を、プロが無料診断</h3><p>外壁・屋根の状態を隅々まで点検し、写真つきでご報告します。</p></div></div>
+      <div class="chip-card"><div class="swatch" style="--c:var(--c2)"><b>No.02</b></div><div class="body"><h3>対応の速さでは負けません</h3><p>お問い合わせから現地調査まで、地域密着のスピードで動きます。</p></div></div>
+      <div class="chip-card"><div class="swatch" style="--c:var(--c3)"><b>No.03</b></div><div class="body"><h3>世界に一つだけのお見積り書</h3><p>使う塗料・数量・工程まで細かく記載。ご納得いただけるまでご説明します。</p></div></div>
+      <div class="chip-card"><div class="swatch" style="--c:var(--c4)"><b>No.04</b></div><div class="body"><h3>技術は絶対の自信あり</h3><p>職人は全員プロ。とにかくお客様1番で仕上げます。</p></div></div>
+      <div class="chip-card"><div class="swatch" style="--c:var(--c5)"><b>No.05</b></div><div class="body"><h3>最長10年保証＋建物カルテ</h3><p>塗装後も安心。建物カルテをプレゼントし、年1回以上ご連絡します。</p></div></div>
+      <div class="chip-card"><div class="swatch" style="--c:#a39b89"><b>No.06</b></div><div class="body"><h3>徹底した清掃管理</h3><p>ご近所への配慮と現場の清掃を、工事品質の一部と考えます。</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 数字帯（塗り転換2・濃地） -->
+<section id="facts" class="paint-sec">
+  <div class="paint"></div>
+  <div class="frame">
+    <div class="big">
+      <div class="num"><span data-count="7856">0</span><small>件</small></div>
+      <div class="lab">総施工件数</div>
+    </div>
+    <div class="row">
+      <div><div class="num"><span data-count="10">0</span><small>年</small></div><div class="lab">最長保証</div></div>
+      <div><div class="num">年中無休</div><div class="lab">9:00 – 18:00</div></div>
+      <div><div class="num"><span data-count="3">0</span><small>拠点</small></div><div class="lab">千葉・埼玉・仙台</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 4つの安心（罫の2×2） -->
+<section id="trust">
+  <div class="frame">
+    <div class="sec-head"><h2>一陽ならではの4つの安心</h2><span class="en">TRUST</span></div>
+    <div class="grid">
+      <div class="cell"><div class="n">01</div><h3>建設業許可 取得</h3><p>足場の組立まで自社で施工。別業者を挟まないぶん費用を抑え、話が早い現場をつくります。</p></div>
+      <div class="cell"><div class="n">02</div><h3>労災保険 加入店</h3><p>全職人が労災保険の対象。高所作業のリスクに、制度でも備えています。</p></div>
+      <div class="cell"><div class="n">03</div><h3>社会保険 加入店</h3><p>職人の処遇を整えることが、施工品質の土台だと考えています。</p></div>
+      <div class="cell"><div class="n">04</div><h3>リフォーム瑕疵保険 加入店</h3><p>国土交通大臣指定の検査機関に所属する建築士が、第三者の目で検査します。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 施工実績（ずらし配置） -->
+<section id="works">
+  <div class="frame">
+    <div class="sec-head"><h2>施工実績</h2><span class="en">WORKS — 使った色と、いっしょに。</span></div>
+    <div class="grid">
+      <a class="work" href="#"><div class="ph"><div class="img" style="background-image:url('assets_ichiyo/h1_white.jpg')"></div></div><div class="meta" style="--c:var(--c6)"><i></i><div><span class="t">茂原市 W様邸</span><span class="c">外壁: ウォームホワイト IY-101</span></div></div></a>
+      <a class="work" href="#"><div class="ph"><div class="img" style="background-image:url('assets_ichiyo/h2_grey.jpg')"></div></div><div class="meta" style="--c:var(--c1)"><i></i><div><span class="t">花見川区 I様邸</span><span class="c">外壁: スレートグレー IY-204</span></div></div></a>
+      <a class="work" href="#"><div class="ph"><div class="img" style="background-image:url('assets_ichiyo/h3_beige.jpg')"></div></div><div class="meta" style="--c:var(--c2)"><i></i><div><span class="t">茂原市 S様邸</span><span class="c">外壁: サンドベージュ IY-113</span></div></div></a>
+      <a class="work" href="#"><div class="ph"><div class="img" style="background-image:url('assets_ichiyo/h4_sage.jpg')"></div></div><div class="meta" style="--c:var(--c3)"><i></i><div><span class="t">船橋市 O様邸</span><span class="c">外壁: セージグリーン IY-322</span></div></div></a>
+      <a class="work" href="#"><div class="ph"><div class="img" style="background-image:url('assets_ichiyo/h5_navy.jpg')"></div></div><div class="meta" style="--c:var(--c4)"><i></i><div><span class="t">茂原市 O様邸</span><span class="c">アクセント: ディープネイビー IY-407</span></div></div></a>
+      <a class="work" href="#"><div class="ph"><div class="img" style="background-image:url('assets_ichiyo/h6_terra.jpg')"></div></div><div class="meta" style="--c:var(--c5)"><i></i><div><span class="t">八千代市 T様邸</span><span class="c">外壁: テラコッタ IY-518</span></div></div></a>
+    </div>
+    <div class="grid-tail"></div>
+  </div>
+</section>
+
+<!-- お客様の声 -->
+<section id="voice">
+  <div class="frame">
+    <div class="sec-head"><h2>お客様の声</h2><span class="en">VOICE</span></div>
+    <div class="grid">
+      <div class="vq" style="--c:var(--c3)"><p>大工工事も要望どおり。全体をよく見てくれて満足です。</p><div class="who">四街道市 鈴木様邸</div></div>
+      <div class="vq" style="--c:var(--c2)"><p>きれいな仕上がりで大変満足しています。</p><div class="who">八千代市 N様邸</div></div>
+      <div class="vq" style="--c:var(--c4)"><p>若さと誠実さ、そしてプロ意識の高さを感じました。</p><div class="who">八千代市 太田様邸</div></div>
+      <div class="vq" style="--c:var(--c5)"><p>職人さんも足場屋さんも、全員感じが良かった。</p><div class="who">船橋市 矢吹様邸</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="frame">
+    <div class="sec-head"><h2>こんなお悩み、ありませんか？</h2><span class="en">FAQ</span></div>
+    <details><summary>見積もりにお金はかかりますか？<span class="ic"></span></summary><div class="a"><p>無料です。しつこい営業も一切いたしません。</p></div></details>
+    <details><summary>小さな工事でも頼めますか？<span class="ic"></span></summary><div class="a"><p>犬小屋から戸建住宅まで、規模を問わずお受けします。</p></div></details>
+    <details><summary>予算が限られているのですが。<span class="ic"></span></summary><div class="a"><p>ご予算の中で最善のプランをご提案します。見積り書には塗料・数量・工程まで細かく記載します。</p></div></details>
+    <details><summary>塗装以外の工事もできますか？<span class="ic"></span></summary><div class="a"><p>屋根・内装・水回りのリフォーム、雨漏りの補修まで対応します。</p></div></details>
+    <details><summary>工事のあとが心配です。<span class="ic"></span></summary><div class="a"><p>最長10年の保証つき。建物カルテをお渡しし、年1回以上こちらからご連絡します。</p></div></details>
+  </div>
+</section>
+
+<!-- 施工エリア -->
+<section id="area">
+  <div class="frame">
+    <div class="sec-head"><h2>施工エリア</h2><span class="en">AREA</span></div>
+    <div class="tags">
+      <span class="main">八千代市</span><span class="main">船橋市</span><span class="main">柏市</span>
+      <span class="main">松戸市</span><span class="main">白井市</span><span class="main">印西市</span>
+      <span>千葉市</span><span>茂原市</span><span>四街道市</span><span>茨城県全域</span>
+    </div>
+    <p class="note">上記以外の地域もご相談ください。埼玉・仙台にも営業所があります。</p>
+  </div>
+</section>
+
+<!-- CTA（塗り転換3・陽橙の一点） -->
+<section id="cta" class="paint-sec">
+  <div class="paint"></div>
+  <div class="frame">
+    <h2>まずは、無料診断から。</h2>
+    <p>外壁・屋根の状態を、プロの目で拝見します。</p>
+    <div class="tel-big">0120-407-616</div>
+    <div class="hours">9:00 – 18:00 ／ 年中無休</div>
+    <a class="btn" href="#">無料お見積り・ご相談フォーム</a>
+  </div>
+</section>
+
+<footer>
+  <div class="frame">
+    <div class="offices">
+      <div><b>本社</b>千葉県八千代市上高野2060-7<br>TEL 0120-407-616</div>
+      <div><b>埼玉営業所</b>さいたま市西区大字飯田453-1<br>TEL 048-780-2226</div>
+      <div><b>仙台営業所</b>仙台市太白区東中田6-8-21<br>TEL 022-781-9526</div>
+    </div>
+    <div class="cp">© ICHIYO CO., LTD. — 実験用リデザインモック（デザイン実験・限定共有）</div>
+  </div>
+</footer>
+
+<script>
+gsap.registerPlugin(ScrollTrigger);
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const FLAT = new URLSearchParams(location.search).has('flat');
+if (FLAT) {
+  document.documentElement.classList.add('flat');
+  document.querySelectorAll('[data-count]').forEach(el => el.textContent = (+el.dataset.count).toLocaleString());
+}
+
+const lenis = FLAT ? null : new Lenis({ lerp: 0.09 });
+if (!FLAT) {
+  lenis.on('scroll', ScrollTrigger.update);
+  gsap.ticker.add(t => lenis.raf(t * 1000));
+  gsap.ticker.lagSmoothing(0);
+}
+
+if (!FLAT) {
+
+/* ---------- ローダー: 3本の色帯が壁を塗って通過→社名→幕上げ ---------- */
+gsap.set('#hero .line em', { yPercent: 110 });
+function intro(){
+  const tl = gsap.timeline({ defaults: { ease: 'power3.inOut' } });
+  if (reduced) tl.timeScale(3);
+  lenis.stop();
+  tl.to('#loader .stripes i', { xPercent: 202, duration: 1.5, stagger: 0.14, ease: 'power2.inOut' })
+    .to('#loader .mark', { opacity: 1, duration: .5 }, '-=1.0')
+    .to('#loader', { yPercent: -100, duration: .85, ease: 'power4.inOut' }, '+=0.25')
+    .set('#loader', { display: 'none' })
+    .add(() => lenis.start(), '<')
+    .to('#hero .line em', { yPercent: 0, duration: 1, stagger: .12, ease: 'power4.out' }, '<')
+    .from('#hero .field', { xPercent: 30, duration: 1.2, ease: 'power3.out' }, '<')
+    .from('#hero .chips i', { y: 30, opacity: 0, duration: .6, stagger: .06, ease: 'power3.out' }, '<+.3');
+}
+document.fonts.ready.then(intro);
+
+/* ---------- 主役: 塗り転換（clip-pathの斜めエッジをscrubで進める・pinなし） ---------- */
+gsap.utils.toArray('.paint-sec').forEach(sec => {
+  const paint = sec.querySelector('.paint');
+  const st = { x: -6 };
+  const setX = () => paint.style.setProperty('--x', st.x + '%');
+  setX();
+  gsap.to(st, { x: 106, ease: 'none', onUpdate: setX,
+    scrollTrigger: { trigger: sec, start: 'top 88%', end: 'top 22%', scrub: 1 } });
+});
+
+/* ---------- ヒーロー色面の軽い退場（別速度） ---------- */
+gsap.to('#hero .field', { yPercent: -10, ease: 'none',
+  scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: true } });
+gsap.to('#hero .field2', { yPercent: 14, ease: 'none',
+  scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: true } });
+
+/* ---------- 出現 ---------- */
+gsap.utils.toArray('.sec-head').forEach(h => {
+  gsap.from(h, { y: 32, opacity: 0, duration: .7, ease: 'power3.out',
+    scrollTrigger: { trigger: h, start: 'top 82%' } });
+});
+[['#reasons .chip-card'], ['#trust .cell'], ['#voice .vq'], ['#area .tags span']].forEach(([sel]) => {
+  const items = gsap.utils.toArray(sel);
+  gsap.from(items, { y: 34, opacity: 0, duration: .65, stagger: .07, ease: 'power3.out',
+    scrollTrigger: { trigger: items[0], start: 'top 86%' } });
+});
+
+/* ---------- 実績: 写真パララックス（±8%規範） ---------- */
+gsap.utils.toArray('.work .img').forEach(img => {
+  if (reduced) return;
+  gsap.fromTo(img, { yPercent: 6 }, { yPercent: -6, ease: 'none',
+    scrollTrigger: { trigger: img.parentElement, start: 'top bottom', end: 'bottom top', scrub: true } });
+});
+
+/* ---------- カウントアップ ---------- */
+gsap.utils.toArray('[data-count]').forEach(el => {
+  const obj = { v: 0 };
+  ScrollTrigger.create({ trigger: el, start: 'top 85%', once: true,
+    onEnter: () => gsap.to(obj, { v: +el.dataset.count, duration: reduced ? 0 : 2, ease: 'power2.out',
+      onUpdate: () => el.textContent = Math.round(obj.v).toLocaleString() }) });
+});
+
+} /* end !FLAT */
+</script>
+</body>
+</html>
